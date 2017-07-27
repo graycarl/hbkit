@@ -1,10 +1,15 @@
 # 自用命令行工具
 
-## TODO
+```bash
+$ hbkit
+Usage: hbkit [OPTIONS] COMMAND [ARGS]...
 
-- 密码产生器
-  + 自动保存到剪贴板
-  + 自动将最近一次产生写入 `/tmp`
-- 短链接产生器
-  + 支持 bit.ly
-  + 支持 微博短链接
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  random  Generate random string.
+  short   Shorten your url.
+```
+
+TODO 的任务改用 https://github.com/graycarl/hbkit/issues 来管理。
