@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+import os
 import uuid
 import click
 import string
@@ -14,6 +15,14 @@ def output(str):
         pipe = subprocess.Popen('pbcopy', stdin=subprocess.PIPE).stdin
         pipe.write(str)
         pipe.close()
+    try:
+        fd = os.open('/tmp/hbkit-latest-random',
+                     os.O_WRONLY | os.O_CREAT, 0o222)
+    except:
+        pass
+    else:
+        with open(fd, 'w') as f:
+            f.write(str + os.linesep)
 
 
 @click.group('random')
