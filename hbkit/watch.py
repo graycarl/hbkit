@@ -11,9 +11,27 @@ import requests
 import datetime
 
 
-def output(message):
-    now = datetime.datetime.now()
-    click.echo(u'[{}] {}'.format(now.strftime('%H:%M:%S'), message))
+class Output(object):
+
+    def __init__(self):
+        self.ok_counter = 0
+
+    def new_line(self):
+        now = datetime.datetime.now()
+        click.echo(u'\n[{}] '.format(now.strftime('%H:%M:%S')), nl=False)
+
+    def ok(self):
+        self.ok_counter += 1
+        if self.ok_counter == 1:
+            self.new_line()
+        click.echo('.', nl=False)
+        if self.ok_counter == 80:
+            self.ok_counter = 0
+
+    def boom(self, message):
+        self.new_line()
+        click.echo(message, nl=False)
+        self.ok_counter = 0
 
 
 @click.command('watch-urls')
@@ -31,6 +49,7 @@ def cli(urls, timeout, interval):
             urls[i] = 'http://' + urls[i]
         click.echo('Start to watch: {}'.format(urls[i]))
 
+    output = Output()
     try:
         while True:
             for url in urls:
@@ -38,11 +57,11 @@ def cli(urls, timeout, interval):
                     rv = requests.get(url, timeout=timeout)
                     rv.raise_for_status()
                 except requests.Timeout:
-                    output('Timeout: {}'.format(url))
+                    output.boom('Timeout: {}'.format(url))
                 except requests.HTTPError:
-                    output('Status {}: {}'.format(rv.status_code, url))
+                    output.boom('Status {}: {}'.format(rv.status_code, url))
                 else:
-                    click.echo('.', nl=False)
+                    output.ok()
             time.sleep(interval)
     except KeyboardInterrupt:
-        click.echo('Exit')
+        click.echo('\nExit')
