@@ -8,8 +8,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  random  Generate random string.
-  short   Shorten your url.
+  random      Generate random string.
+  short       Shorten your url.
+  watch-urls  Watch urls status.
 ```
-
-TODO 的任务改用 https://github.com/graycarl/hbkit/issues 来管理。
