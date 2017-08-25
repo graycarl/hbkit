@@ -1,6 +1,6 @@
 {
     "python.pythonPath": "${workspaceRoot}/venv/bin/python",
-    "python.unitTest.pyTestEnabled": true,
+    "python.unitTest.pyTestEnabled": false,
     "files.exclude": {
         "**/.cache": true
     }

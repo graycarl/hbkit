@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import os
+import io
 import uuid
 import click
 import string
@@ -21,7 +22,7 @@ def output(str):
     except:
         pass
     else:
-        with open(fd, 'w') as f:
+        with io.open(fd, 'wb') as f:
             f.write(str + os.linesep)
 
 
