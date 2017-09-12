@@ -3,3 +3,4 @@ venv
 *.egg-info
 *.pyc
 *.eggs
+tags
