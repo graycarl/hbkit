@@ -1,5 +1,9 @@
 import os
+import sys
 
+sys.path.append(
+    os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
+)
 # fix locale settings
 # When runed by vscode python unittest extension, the locale
 # environment value will lost. That will cause RuntimeError
