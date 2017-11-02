@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import click
-from . import core, random, short, watch, git
+from . import core, random, short, watch, git, backup
 
-__version__ = '0.4'
+__version__ = '0.5'
 
 
 def print_version(ctx, param, value):
@@ -25,3 +25,4 @@ cli.add_command(random.cli, 'random')
 cli.add_command(short.cli, 'short')
 cli.add_command(watch.cli, 'watch-urls')
 cli.add_command(git.cli, 'git')
+cli.add_command(backup.cli, 'backup')
