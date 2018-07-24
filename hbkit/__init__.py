@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import click
-from . import core, random, short, watch, git, backup
+from . import core, random, short, watch, git, backup, pi
 
 __version__ = '0.5'
 
@@ -26,3 +26,4 @@ cli.add_command(short.cli, 'short')
 cli.add_command(watch.cli, 'watch-urls')
 cli.add_command(git.cli, 'git')
 cli.add_command(backup.cli, 'backup')
+cli.add_command(pi.cli, 'pi')

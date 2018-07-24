@@ -22,7 +22,7 @@ def output(str):
     except:
         pass
     else:
-        with io.open(fd, 'wb') as f:
+        with io.open(fd, 'w') as f:
             f.write(str + os.linesep)
 
 
