@@ -4,12 +4,17 @@
 
 ```bash
 $ hbkit
+
 Usage: hbkit [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  --help  Show this message and exit.
+  --version  Print out current version.
+  --help     Show this message and exit.
 
 Commands:
+  backup      Make a backup copy for file or directory.
+  git         Tools for git.
+  pi          Tools for Raspberry PI
   random      Generate random string.
   short       Shorten your url.
   watch-urls  Watch urls status.
