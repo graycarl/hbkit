@@ -15,7 +15,8 @@ setup(
     name='hbkit',
     version=version,
     packages=['hbkit'],
-    install_requires=['Click', 'requests'],
+    install_requires=['Click>=5.0', 'requests>=2.0', 'future>=0.16'],
+    extras_require=dict(dev=['mock', 'pytest']),
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     entry_points={

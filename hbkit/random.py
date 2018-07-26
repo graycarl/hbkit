@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from builtins import *
 import os
 import io
 import uuid
@@ -40,7 +41,7 @@ def cli_string(length):
     """Generate random string."""
     src = string.ascii_letters
     chars = [random.choice(src) for i in range(length)]
-    output(''.join(chars))
+    output(str(''.join(chars)))
 
 
 @cli.command('number')

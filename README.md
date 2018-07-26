@@ -19,3 +19,9 @@ Commands:
   short       Shorten your url.
   watch-urls  Watch urls status.
 ```
+
+## Setup Dev Environment
+
+1. Create add active a virtualenv;
+2. Run `pip install -e '.[dev]'` in root dir;
+3. Run `py.test`;
