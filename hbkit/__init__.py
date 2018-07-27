@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import click
 from . import core, random, short, watch, git, backup, pi, time
 
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 
 def print_version(ctx, param, value):
