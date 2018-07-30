@@ -41,3 +41,10 @@ def test_parse_time():
     assert ('ISO LOCAL: ' + data.local) in result.output
     assert ('HUMAN: ' + data.human) in result.output
     assert ('TIMESTAMP: ' + data.timestamp) in result.output
+
+
+def test_parse_local_time_missing_second():
+    v = '2018-10-10 10:10'
+    runner = CliRunner()
+    result = runner.invoke(time.cli_parse, [v])
+    assert ('ISO LOCAL: ' + v.replace(' ', 'T')) in result.output

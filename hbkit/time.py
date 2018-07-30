@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from builtins import *
+from builtins import *      # noqa
 import click
 import arrow
 import datetime
@@ -22,8 +22,10 @@ def cli_parse(time_string):
     naive_formats = [
         '%Y-%m-%d %H:%M:%S',
         '%Y-%m-%d %H:%M:%S.%f',
+        '%Y-%m-%d %H:%M',
         '%Y-%m-%dT%H:%M:%S',
         '%Y-%m-%dT%H:%M:%S.%f',
+        '%Y-%m-%dT%H:%M',
     ]
     for f in naive_formats:
         try:
