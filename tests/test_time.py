@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from builtins import *
+from builtins import *      # noqa
 import arrow
 from click.testing import CliRunner
-import time as libtime
 from hbkit import time
 from hbkit.lib import Namespace
 
