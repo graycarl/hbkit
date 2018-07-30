@@ -56,6 +56,8 @@ class ConfigManager(object):
         if not isinstance(value, str):
             raise RuntimeError('Only string value is supportted.')
         section, option = key.split('.', 1)
+        if not (section in self.defaults and option in self.defualts[section]):
+            raise KeyError(key)
         if section not in self.local:
             self.local[section] = {}
         if value is None:
@@ -67,10 +69,11 @@ class ConfigManager(object):
         if type not in (str, bool, int, float):
             raise RuntimeError('Unsupported type')
         section, option = key.split('.', 1)
+        value = self.defaults[section][option]
         try:
             value = self.local[section][option]
         except KeyError:
-            value = self.defaults[section][option]
+            pass
         if type is str:
             return value
         elif type is bool:
