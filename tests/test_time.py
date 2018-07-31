@@ -2,12 +2,11 @@
 from __future__ import absolute_import
 from builtins import *      # noqa
 import arrow
-from click.testing import CliRunner
 from hbkit import time
 from hbkit.lib import Namespace
 
 
-def test_parse_time():
+def test_parse_time(runner):
     now = arrow.now()
     data = Namespace(
         arrow=now,
@@ -17,7 +16,6 @@ def test_parse_time():
         naive=now.to('local').naive.isoformat(' '),
         human=now.format(time.HUMAN_FORMAT)
     )
-    runner = CliRunner()
     for key in ('utc', 'local', 'naive'):
         result = runner.invoke(time.cli_parse, [data[key]])
         print(result.output)
@@ -43,8 +41,7 @@ def test_parse_time():
     assert ('TIMESTAMP: ' + data.timestamp) in result.output
 
 
-def test_parse_local_time_missing_second():
+def test_parse_local_time_missing_second(runner):
     v = '2018-10-10 10:10'
-    runner = CliRunner()
     result = runner.invoke(time.cli_parse, [v])
     assert ('ISO LOCAL: ' + v.replace(' ', 'T')) in result.output
