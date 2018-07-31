@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from builtins import *
+from builtins import *      # noqa
 import os
 import io
 import uuid
@@ -15,7 +15,7 @@ def output(str):
     click.echo(str)
     if pbcopy:
         pipe = subprocess.Popen('pbcopy', stdin=subprocess.PIPE).stdin
-        pipe.write(str)
+        pipe.write(str.encode('utf-8'))
         pipe.close()
     try:
         fd = os.open('/tmp/hbkit-latest-random',
