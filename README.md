@@ -3,13 +3,13 @@
 [![Build Status](https://travis-ci.org/graycarl/hbkit.svg?branch=master)](https://travis-ci.org/graycarl/hbkit)
 
 ```bash
-$ hbkit
-
+$ hbkit --help
 Usage: hbkit [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  --version  Print out current version.
-  --help     Show this message and exit.
+  --version      Print out current version.
+  --config PATH  The config file path.  [default: ~/.config/hbkit/hbkit.ini]
+  --help         Show this message and exit.
 
 Commands:
   backup      Make a backup copy for file or directory.
@@ -17,6 +17,7 @@ Commands:
   pi          Tools for Raspberry PI
   random      Generate random string.
   short       Shorten your url.
+  time        Tools about date & time.
   watch-urls  Watch urls status.
 ```
 

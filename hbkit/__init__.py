@@ -20,7 +20,7 @@ def print_version(ctx, param, value):
 @click.option('--config', 'confpath',
               type=click.Path(dir_okay=False),
               help='The config file path.',
-              default='~/.config/hbkit/hbkit.ini')
+              default='~/.config/hbkit/hbkit.ini', show_default=True)
 def cli(confpath):
     core.setup(confpath)
 
