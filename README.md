@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/graycarl/hbkit.svg?branch=master)](https://travis-ci.org/graycarl/hbkit)
 
+在 Python3 下开发，使用 python-future 库同时兼容 Python2。
+
 ```bash
 $ hbkit --help
 Usage: hbkit [OPTIONS] COMMAND [ARGS]...
