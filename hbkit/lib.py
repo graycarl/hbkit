@@ -24,7 +24,7 @@ class ConfigManager(object):
     2. Write to ini file
     3. Support default values
 
-    The ini file do not has a datatype concept, so ConfigManger also assume
+    The ini file do not has a datatype concept, so ConfigManager also assume
     all key-value as string.
 
     :param path: the configuration file path to load.
@@ -32,7 +32,7 @@ class ConfigManager(object):
                      `{'m1': {'key1': 'value1', 'key2': 'value2'}, 'm2': {}}`
     """
     Item = collections.namedtuple('ConfigItem', ('key', 'value', 'default'))
-    _bool_true_values = {'yes', 'no', 'true', '1'}
+    _bool_true_values = {'yes', 'on', 'true', '1'}
     _bool_false_values = {'no', 'off', 'false', '0'}
 
     def __init__(self, path, defaults):
@@ -53,17 +53,17 @@ class ConfigManager(object):
 
     def set(self, key, value):
         """Set local Value. None means delete the local key, using defaults."""
+        section, option = key.split('.', 1)
+        if value is None:
+            self.local[section].pop(option, None)
+            return
         if not isinstance(value, str):
             raise RuntimeError('Only string value is supportted.')
-        section, option = key.split('.', 1)
-        if not (section in self.defaults and option in self.defualts[section]):
+        if not (section in self.defaults and option in self.defaults[section]):
             raise KeyError(key)
         if section not in self.local:
             self.local[section] = {}
-        if value is None:
-            self.local[section].pop(option, None)
-        else:
-            self.local[section][option] = value
+        self.local[section][option] = value
 
     def get(self, key, type=str):
         if type not in (str, bool, int, float):
@@ -82,10 +82,10 @@ class ConfigManager(object):
             elif value in self._bool_false_values:
                 return False
             else:
-                raise TypeError('Wrong boolean string')
+                raise ValueError('Wrong boolean string')
         else:
             return type(value)
 
     def save_to_file(self):
-        with open(self.path, 'wb') as configfile:
+        with open(self.path, 'w') as configfile:
             self.local.write(configfile)
