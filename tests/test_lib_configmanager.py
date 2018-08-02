@@ -1,30 +1,32 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from builtins import *      # noqa
 import pytest
 from hbkit.lib import ConfigManager
 
 
 defaults = {
     'sec1': {
-        'option1': 'sec1.option1.value',
-        'option2': 'sec1.option2.value',
+        'option1': u'sec1.option1.value',
+        'option2': u'sec1.option2.value',
     },
     'sec2': {
-        'option1': 'sec2.option1.value',
-        'optionx': '333',
+        'option1': u'sec2.option1.value',
+        'optionx': u'333',
     },
     'sec3': {
-        'option1': 'true',
-        'option2': 'false',
-        'option3': '123',
-        'option4': 'no',
-        'option5': 'unknown',
-        'option6': '11.22',
+        'option1': u'true',
+        'option2': u'false',
+        'option3': u'123',
+        'option4': u'no',
+        'option5': u'unknown',
+        'option6': u'11.22',
         'optionx': None,
     }
 }
 
 
-inicontent = """\
+inicontent = u"""\
 [sec1]
 option1 = sec1.option1.value.new
 option2 = 222
@@ -43,16 +45,16 @@ def confpath(tmpdir):
 
 def test_load_file(confpath):
     cm = ConfigManager(confpath.strpath, defaults)
-    assert cm.get('sec1.option1') == 'sec1.option1.value.new'
+    assert cm.get('sec1.option1') == u'sec1.option1.value.new'
     assert cm.get('sec2.optionx') == defaults['sec2']['optionx']
-    cm.set('sec1.option1', 'newvalue')
-    assert cm.get('sec1.option1') == 'newvalue'
+    cm.set('sec1.option1', u'newvalue')
+    assert cm.get('sec1.option1') == u'newvalue'
 
 
 def test_get_values(confpath):
     cm = ConfigManager(confpath.strpath, defaults)
-    assert cm.get('sec3.option5') == 'unknown'
-    assert cm.get('sec3.option5', str) == 'unknown'
+    assert cm.get('sec3.option5') == u'unknown'
+    assert cm.get('sec3.option5', str) == u'unknown'
 
     assert cm.get('sec3.option3', int) == 123
     with pytest.raises(ValueError):
@@ -80,8 +82,8 @@ def test_get_values(confpath):
 def test_set_values(confpath):
     cm = ConfigManager(confpath.strpath, defaults)
     # set value
-    cm.set('sec3.option2', 'yes')
-    assert cm.get('sec3.option2') == 'yes'
+    cm.set('sec3.option2', u'yes')
+    assert cm.get('sec3.option2') == u'yes'
 
     # clear value
     cm.set('sec1.option1', None)
@@ -107,7 +109,7 @@ def test_save_to_file(confpath):
     old_content = confpath.read()
     assert '[sec3]' not in old_content
     assert 'option1 = sec1.option1.value.new' in old_content
-    cm.set('sec3.option2', 'yes')
+    cm.set('sec3.option2', u'yes')
     cm.set('sec1.option1', None)
     cm.save_to_file()
     new_content = confpath.read()
@@ -120,7 +122,7 @@ def test_save_to_file(confpath):
 def test_save_to_new_file(tmpdir):
     confpath = tmpdir.join('newconf.ini')
     cm = ConfigManager(confpath.strpath, defaults)
-    cm.set('sec3.option2', 'yes')
+    cm.set('sec3.option2', u'yes')
     cm.save_to_file()
     new_content = confpath.read()
     assert '[sec3]' in new_content
