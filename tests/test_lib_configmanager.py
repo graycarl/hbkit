@@ -18,7 +18,8 @@ defaults = {
         'option3': '123',
         'option4': 'no',
         'option5': 'unknown',
-        'option6': '11.22'
+        'option6': '11.22',
+        'optionx': None,
     }
 }
 
@@ -68,6 +69,8 @@ def test_get_values(confpath):
     with pytest.raises(ValueError):
         cm.get('sec3.option4', float)
 
+    assert cm.get('sec3.optionx') is None
+
     with pytest.raises(KeyError):
         cm.get('sec3.noexists')
     with pytest.raises(KeyError):
@@ -112,3 +115,13 @@ def test_save_to_file(confpath):
     assert 'option2 = yes' in new_content
     assert 'option1 = sec1.option1.value.new' not in new_content
     assert 'option2 = 222' in new_content
+
+
+def test_save_to_new_file(tmpdir):
+    confpath = tmpdir.join('newconf.ini')
+    cm = ConfigManager(confpath.strpath, defaults)
+    cm.set('sec3.option2', 'yes')
+    cm.save_to_file()
+    new_content = confpath.read()
+    assert '[sec3]' in new_content
+    assert 'option2 = yes' in new_content

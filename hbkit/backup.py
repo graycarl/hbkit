@@ -3,6 +3,7 @@ import os
 import click
 import zipfile
 import datetime
+from . import core
 
 
 @click.command('backup')
@@ -24,8 +25,7 @@ def cli(path):
     else:
         raise NotImplementedError
 
-    # TODO: Configurable
-    backup_dir = '~/iCloud/Backups/Automatic'
+    backup_dir = core.config.get('backup.dir')
     zipname = os.path.join(os.path.expanduser(backup_dir), zipname)
 
     if os.path.exists(zipname):

@@ -17,8 +17,12 @@ def print_version(ctx, param, value):
 @click.option('--version', is_flag=True, callback=print_version,
               expose_value=False, is_eager=True,
               help='Print out current version.')
-def cli():
-    core.setup()
+@click.option('--config', 'confpath',
+              type=click.Path(dir_okay=False),
+              help='The config file path.',
+              default='~/.config/hbkit/hbkit.ini')
+def cli(confpath):
+    core.setup(confpath)
 
 
 cli.add_command(random.cli, 'random')
