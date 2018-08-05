@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from builtins import *      # noqa
 import pytest
+from hbkit import core, config
 from hbkit.lib import ConfigManager
 
 
@@ -43,6 +44,12 @@ def confpath(tmpdir):
     return path
 
 
+@pytest.fixture
+def core_setup(confpath, monkeypatch):
+    monkeypatch.setattr(core, 'config_defaults', defaults)
+    core.setup(confpath.strpath)
+
+
 def test_load_file(confpath):
     cm = ConfigManager(confpath.strpath, defaults)
     assert cm.get('sec1.option1') == u'sec1.option1.value.new'
@@ -73,9 +80,9 @@ def test_get_values(confpath):
 
     assert cm.get('sec3.optionx') is None
 
-    with pytest.raises(KeyError):
+    with pytest.raises(cm.OptionNotFound):
         cm.get('sec3.noexists')
-    with pytest.raises(KeyError):
+    with pytest.raises(cm.OptionNotFound):
         cm.get('secx.option1')
 
 
@@ -92,6 +99,10 @@ def test_set_values(confpath):
     # wrong type
     with pytest.raises(RuntimeError):
         cm.set('sec3.option2', True)
+
+    # wrong key
+    with pytest.raises(cm.OptionNotFound):
+        cm.set('sec3.noexists', 'newvalue')
 
 
 def test_list_values(confpath):
@@ -127,3 +138,35 @@ def test_save_to_new_file(tmpdir):
     new_content = confpath.read()
     assert '[sec3]' in new_content
     assert 'option2 = yes' in new_content
+
+
+def test_command_list(confpath, monkeypatch, runner):
+    monkeypatch.setattr(core, 'config_defaults', defaults)
+    core.setup(confpath.strpath)
+    result = runner.invoke(config.cli_list).output
+    assert '[sec1.option1]: sec1.option1.value.new' in result
+    assert '[sec3.option5]: unknown' in result
+    result = runner.invoke(config.cli_list, ['--local']).output
+    assert '[sec1.option1]: sec1.option1.value.new' in result
+    assert '[sec3.option5]: unknown' not in result
+    result = runner.invoke(config.cli_list, ['--default']).output
+    assert '[sec1.option1]: sec1.option1.value' in result
+    assert '[sec3.option5]: unknown' in result
+
+
+def test_command_set(confpath, monkeypatch, runner):
+    monkeypatch.setattr(core, 'config_defaults', defaults)
+    core.setup(confpath.strpath)
+    runner.invoke(config.cli_set, ['sec1.option1', 'set_value_1'])
+    new_content = confpath.read()
+    assert 'option1 = set_value_1' in new_content
+    assert 'option1 = sec1.option1.value.new' not in new_content
+
+
+def test_command_unset(confpath, monkeypatch, runner):
+    monkeypatch.setattr(core, 'config_defaults', defaults)
+    core.setup(confpath.strpath)
+    runner.invoke(config.cli_unset, ['sec1.option1'])
+    new_content = confpath.read()
+    assert '[sec1]\noption1' not in new_content
+    assert '[sec2]\noption1' in new_content

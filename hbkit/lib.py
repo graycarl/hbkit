@@ -35,11 +35,24 @@ class ConfigManager(object):
     _bool_true_values = {'yes', 'on', 'true', '1'}
     _bool_false_values = {'no', 'off', 'false', '0'}
 
+    class OptionNotFound(Exception):
+        def __init__(self, key):
+            self.key = key
+
     def __init__(self, path, defaults):
         self.path = path
         self.defaults = defaults
         self.local = configparser.ConfigParser()
         self.local.read([path])
+
+    def _parse_key(self, key):
+        try:
+            section, option = key.split('.', 1)
+        except ValueError:
+            raise self.OptionNotFound(key)
+        if not (section in self.defaults and option in self.defaults[section]):
+            raise self.OptionNotFound(key)
+        return section, option
 
     def list(self):
         for section in self.defaults:
@@ -53,14 +66,12 @@ class ConfigManager(object):
 
     def set(self, key, value):
         """Set local Value. None means delete the local key, using defaults."""
-        section, option = key.split('.', 1)
+        section, option = self._parse_key(key)
         if value is None:
             self.local[section].pop(option, None)
             return
         if not isinstance(value, str):
             raise RuntimeError('Only string value is supportted.')
-        if not (section in self.defaults and option in self.defaults[section]):
-            raise KeyError(key)
         if section not in self.local:
             self.local[section] = {}
         self.local[section][option] = value
@@ -68,7 +79,7 @@ class ConfigManager(object):
     def get(self, key, type=str):
         if type not in (str, bool, int, float):
             raise RuntimeError('Unsupported type')
-        section, option = key.split('.', 1)
+        section, option = self._parse_key(key)
         value = self.defaults[section][option]
         try:
             value = self.local[section][option]
