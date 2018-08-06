@@ -101,7 +101,9 @@ class ConfigManager(object):
     def save_to_file(self):
         try:
             configfile = open(self.path, 'w')
-        except FileNotFoundError:
+        # 暂时没法使用 Python3 的 FileNotFoundError，因为 Python2 没有这个定义
+        # 且 Python-Future 暂时没有对它进行兼容。
+        except IOError:
             os.makedirs(os.path.dirname(self.path))
             configfile = open(self.path, 'w')
         with configfile:
