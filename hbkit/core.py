@@ -5,14 +5,6 @@ import os.path
 from .lib import ConfigManager
 
 
-config = None
-
-
-def setup(confpath):
-    global config
-    config = ConfigManager(os.path.expanduser(confpath), config_defaults)
-
-
 config_defaults = {
     'domain': {
         'dnspod.token': None,
@@ -21,3 +13,12 @@ config_defaults = {
         'dir': '~/iCloud/Backups/Automatic'
     }
 }
+
+
+class Global(object):
+    """The global object passed by context."""
+
+    def __init__(self, confpath, verbose=False):
+        self.config = ConfigManager(
+            os.path.expanduser(confpath), config_defaults)
+        self.verbose = verbose
