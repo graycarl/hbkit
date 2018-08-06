@@ -110,7 +110,32 @@ class ConfigManager(object):
             self.local.write(configfile)
 
 
-class DNSPodClient(object):
+class DNSClient(object):
 
-    def __init__(self, token):
+    Record = collections.namedtuple(
+        'DNSRecord', ('name', 'type', 'value'))
+
+    def __init__(self, domain):
+        self.domain = domain
+
+    def list(self):
         pass
+
+    def get(self, name):
+        pass
+
+    def add(self, record):
+        pass
+
+    def set(self, record):
+        pass
+
+    def delete(self, record):
+        pass
+
+
+class DNSPodClient(DNSClient):
+
+    def __init__(self, domain, token):
+        self.domain = domain
+        self.token = token
