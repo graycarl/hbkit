@@ -31,11 +31,15 @@ def cli_get_public(timeout):
     """Get current public IP."""
     for name in ('ipify', 'httpbin'):
         service = SERVICES[name]
-        response = requests.get(service['url'], params=service.get('params'),
-                                timeout=timeout)
-        response.raise_for_status()
-        ip = service['response'](response.json())
-        break
+        try:
+            response = requests.get(service['url'],
+                                    params=service.get('params'),
+                                    timeout=timeout)
+            response.raise_for_status()
+            ip = service['response'](response.json())
+            break
+        except requests.exceptions.RequestException:
+            continue
     else:
         raise click.ClickException('Can not get public IP')
     click.echo(ip)
