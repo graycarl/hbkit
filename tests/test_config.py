@@ -131,7 +131,7 @@ def test_save_to_file(confpath):
 
 
 def test_save_to_new_file(tmpdir):
-    confpath = tmpdir.join('newconf.ini')
+    confpath = tmpdir.join('confdir').join('newconf.ini')
     cm = ConfigManager(confpath.strpath, defaults)
     cm.set('sec3.option2', u'yes')
     cm.save_to_file()

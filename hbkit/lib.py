@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from builtins import *      # noqa
+import os
 import collections
 import configparser
 
@@ -98,5 +99,10 @@ class ConfigManager(object):
             return type(value)
 
     def save_to_file(self):
-        with open(self.path, 'w') as configfile:
+        try:
+            configfile = open(self.path, 'w')
+        except FileNotFoundError:
+            os.makedirs(os.path.dirname(self.path))
+            configfile = open(self.path, 'w')
+        with configfile:
             self.local.write(configfile)
