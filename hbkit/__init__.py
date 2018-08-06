@@ -13,7 +13,7 @@ def print_version(ctx, param, value):
     ctx.exit()
 
 
-@click.group(context_settings=dict(obj={}))
+@click.group()
 @click.option('--version', is_flag=True, callback=print_version,
               expose_value=False, is_eager=True,
               help='Print out current version.')
@@ -21,8 +21,10 @@ def print_version(ctx, param, value):
               type=click.Path(dir_okay=False),
               help='The config file path.',
               default='~/.config/hbkit/hbkit.ini', show_default=True)
-def cli(confpath):
-    core.setup(confpath)
+@click.option('--verbose', '-v', is_flag=True, help='Print execution details.')
+@click.pass_context
+def cli(context, confpath, verbose):
+    context.obj = core.Global(confpath, verbose=verbose)
 
 
 cli.add_command(random.cli, 'random')
