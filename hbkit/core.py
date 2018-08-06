@@ -6,8 +6,8 @@ from .lib import ConfigManager
 
 
 config_defaults = {
-    'domain': {
-        'dnspod.token': None,
+    'dnspod': {
+        'token': None,
     },
     'backup': {
         'dir': '~/iCloud/Backups/Automatic'

@@ -108,3 +108,9 @@ class ConfigManager(object):
             configfile = open(self.path, 'w')
         with configfile:
             self.local.write(configfile)
+
+
+class DNSPodClient(object):
+
+    def __init__(self, token):
+        pass
