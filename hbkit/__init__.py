@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import click
-from . import core, random, short, watch, git, backup, pi, time, config
+from . import core, random, short, watch, git, backup, pi, time, config, ip
 
 __version__ = '0.6.0'
 
@@ -33,3 +33,4 @@ cli.add_command(backup.cli, 'backup')
 cli.add_command(pi.cli, 'pi')
 cli.add_command(time.cli, 'time')
 cli.add_command(config.cli, 'config')
+cli.add_command(ip.cli, 'ip')
