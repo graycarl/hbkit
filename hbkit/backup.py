@@ -3,12 +3,12 @@ import os
 import click
 import zipfile
 import datetime
-from . import core
 
 
 @click.command('backup')
 @click.argument('path', type=click.Path(exists=True))
-def cli(path):
+@click.pass_obj
+def cli(g, path):
     """Make a backup copy for file or directory."""
     now = datetime.datetime.now()
     date = now.strftime('%Y%m%d%H%M')
@@ -25,7 +25,7 @@ def cli(path):
     else:
         raise NotImplementedError
 
-    backup_dir = core.config.get('backup.dir')
+    backup_dir = g.config.get('backup.dir')
     zipname = os.path.join(os.path.expanduser(backup_dir), zipname)
 
     if os.path.exists(zipname):
