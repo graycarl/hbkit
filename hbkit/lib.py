@@ -115,8 +115,22 @@ class DNSClient(object):
     Record = collections.namedtuple(
         'DNSRecord', ('name', 'type', 'value'))
 
+    class DuplicatedRecord(Exception):
+        """Record already exists."""
+
+    class RecordNotFound(Exception):
+        """Record do not exists."""
+
     def __init__(self, domain):
         self.domain = domain
+
+    def _check_valid(self, record):
+        if record.name == '@' and record.type in ('A', 'CNAME', 'MX'):
+            pass
+        elif record.name != '@' and record.type in ('A', 'CNAME'):
+            pass
+        else:
+            raise RuntimeError('Invalid DNS Record.')
 
     def list(self):
         pass
