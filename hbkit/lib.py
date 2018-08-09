@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from builtins import *      # noqa
 import os
+import re
 import collections
 import configparser
 
@@ -114,6 +115,8 @@ class DNSClient(object):
 
     Record = collections.namedtuple(
         'DNSRecord', ('name', 'type', 'value'))
+    _regex_ip = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
+    _regex_domain = re.compile(r'([-_\w]+\.)+[-_\w]+')
 
     class DuplicatedRecord(Exception):
         """Record already exists."""
@@ -130,22 +133,81 @@ class DNSClient(object):
         elif record.name != '@' and record.type in ('A', 'CNAME'):
             pass
         else:
-            raise RuntimeError('Invalid DNS Record.')
+            raise RuntimeError('Invalid DNS Type.')
+
+        value_type = 'unknown'
+        if self._regex_ip.match(record.value):
+            value_type = 'ip'
+        elif self._regex_domain.match(record.value):
+            value_type = 'domain'
+
+        if record.type == 'A' and value_type == 'ip':
+            pass
+        elif record.type in ('CNAME', 'MX') and value_type == 'domain':
+            pass
+        else:
+            raise RuntimeError('Invalid DNS Value.')
+
+    def _find_same(self, record, records):
+        if record.name == '@':
+            if record.type == 'MX':
+                def fn(r): return r.type == 'MX' and r.name == '@'
+            else:
+                def fn(r): return r.type != 'MX' and r.name == '@'
+        else:
+            def fn(r): return r.name == record.name
+        try:
+            return next(filter(fn, records))
+        except StopIteration:
+            return None
+
+    def _fetch_all(self):
+        raise NotImplementedError
+
+    def _process_add(self, name, type, value):
+        raise NotImplementedError
+
+    def _process_remove(self, id):
+        raise NotImplementedError
 
     def list(self):
-        pass
+        for id, name, type, value in self._fetch_all():
+            yield self.Record(name, type, value)
 
-    def get(self, name):
-        pass
+    def get(self, name, types=None, records=None):
+        records = self.list() if records is None else records
+        for r in records:
+            if types is not None and r.type not in types:
+                continue
+            if r.name != name:
+                continue
+            return r
+        else:
+            raise self.RecordNotFound(name)
 
     def add(self, record):
-        pass
+        self._check_valid(record)
+        if self._find_same(record, self.list()):
+            raise self.DuplicatedRecord(record.name)
+        self._process_add(record.name, record.type, record.value)
 
     def set(self, record):
-        pass
+        self._check_valid(record)
+        records = {self.Record(name, type, value): id
+                   for id, name, type, value in self._fetch_all()}
+        current = self._find_same(record, records)
+        if not current:
+            raise self.RecordNotFound(record.name)
+        self._process_remove(records[current])
+        self._process_add(record.name, record.type, record.value)
 
-    def delete(self, record):
-        pass
+    def delete(self, name, types=None):
+        records = {self.Record(name, type, value): id
+                   for id, name, type, value in self._fetch_all()}
+        current = self.get(name, types)
+        if not current:
+            raise self.RecordNotFound(name)
+        self._process_remove(records[current])
 
 
 class DNSPodClient(DNSClient):
