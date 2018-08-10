@@ -150,5 +150,5 @@ def test_client_base_valid_check():
         client.set(DNSClient.Record('x', 'XX', 'a.b.c'))
 
 
-def test_dns():
+def test_dnspod():
     pass

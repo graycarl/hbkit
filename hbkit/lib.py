@@ -215,3 +215,12 @@ class DNSPodClient(DNSClient):
     def __init__(self, domain, token):
         self.domain = domain
         self.token = token
+
+    def _fetch_all(self):
+        pass
+
+    def _process_add(self):
+        pass
+
+    def _process_remove(self):
+        pass
