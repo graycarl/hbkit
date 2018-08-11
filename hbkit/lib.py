@@ -3,6 +3,9 @@ from __future__ import absolute_import
 from builtins import *      # noqa
 import os
 import re
+import urllib
+import logging
+import requests
 import collections
 import configparser
 
@@ -113,6 +116,8 @@ class ConfigManager(object):
 
 class DNSClient(object):
 
+    logger = logging.getLogger('dnsclient')
+
     Record = collections.namedtuple(
         'DNSRecord', ('name', 'type', 'value'))
     _regex_ip = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
@@ -212,15 +217,34 @@ class DNSClient(object):
 
 class DNSPodClient(DNSClient):
 
+    urlbase = 'https://dnsapi.cn'
+
     def __init__(self, domain, token):
-        self.domain = domain
-        self.token = token
+        self.argsbase = dict(login_token=token, format='json', domain=domain)
+
+    def _request(self, path, data=None):
+        url = urllib.parse.urljoin(self.urlbase, path)
+        data = dict(self.argsbase, **data) if data else self.argsbase
+        resp = requests.post(url, data=data)
+        try:
+            resp.raise_for_status()
+        except requests.HTTPError:
+            self.logger.error('Send request to dnspod failed:\n%s', resp.text)
+            raise
+        return resp.json()
 
     def _fetch_all(self):
-        pass
+        resp = self._request('Record.List')
+        assert resp['status']['code'] == '1'
+        for d in resp['records']:
+            yield d['id'], d['name'], d['type'], d['value']
 
-    def _process_add(self):
-        pass
+    def _process_add(self, name, type, value):
+        data = dict(sub_domain=name, record_type=type, value=value,
+                    record_line=u'默认')
+        resp = self._request('Record.Create', data)
+        assert resp['status']['code'] == '1'
 
-    def _process_remove(self):
-        pass
+    def _process_remove(self, id):
+        resp = self._request('Record.Remove', dict(record_id=id))
+        assert resp['status']['code'] == '1'
