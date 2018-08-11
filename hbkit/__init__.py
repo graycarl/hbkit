@@ -4,7 +4,7 @@ import click
 from . import core, random, short, watch, git, backup, time, config, ip
 from . import dns
 
-__version__ = '0.7.0'
+__version__ = '0.8.0'
 
 
 def print_version(ctx, param, value):
