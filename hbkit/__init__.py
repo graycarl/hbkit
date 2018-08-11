@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import click
 from . import core, random, short, watch, git, backup, pi, time, config, ip
+from . import dns
 
 __version__ = '0.7.0'
 
@@ -36,3 +37,4 @@ cli.add_command(pi.cli, 'pi')
 cli.add_command(time.cli, 'time')
 cli.add_command(config.cli, 'config')
 cli.add_command(ip.cli, 'ip')
+cli.add_command(dns.cli, 'dns')
