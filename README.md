@@ -11,12 +11,15 @@ Usage: hbkit [OPTIONS] COMMAND [ARGS]...
 Options:
   --version      Print out current version.
   --config PATH  The config file path.  [default: ~/.config/hbkit/hbkit.ini]
+  -v, --verbose  Print execution details.
   --help         Show this message and exit.
 
 Commands:
   backup      Make a backup copy for file or directory.
+  config      Commands about configuration management.
+  dns         DNS Management Commands.
   git         Tools for git.
-  pi          Tools for Raspberry PI
+  ip          Tools about ip address.
   random      Generate random string.
   short       Shorten your url.
   time        Tools about date & time.
