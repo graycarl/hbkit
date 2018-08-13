@@ -8,7 +8,7 @@ from . import core, random, short, watch, git, backup, time, config, ip  # noqa
 from . import dns   # noqa
 
 
-__version__ = '0.8.0'
+__version__ = '0.8.1'
 
 
 def print_version(ctx, param, value):
