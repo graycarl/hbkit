@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import click
-from . import core, random, short, watch, git, backup, time, config, ip
-from . import dns
+from future.standard_library import install_aliases
+install_aliases()
+
+from . import core, random, short, watch, git, backup, time, config, ip  # noqa
+from . import dns   # noqa
+
 
 __version__ = '0.8.0'
 
