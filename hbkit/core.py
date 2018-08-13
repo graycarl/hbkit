@@ -1,16 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from builtins import *      # noqa
-import os.path
+import os
 from .lib import ConfigManager
 
 
 config_defaults = {
+    'hbkit': {
+        'icloud_path': os.environ.get(
+            'ICLOUD_PATH', '~/Library/Mobile Documents/com~apple~CloudDocs/'
+        ),
+    },
     'dnspod': {
         'token': None,
     },
     'backup': {
-        'dir': '~/iCloud/Backups/Automatic'
+        'dir': '${icloud_path}/Backups/Automatic'
+    },
+    'mac': {
+        'remote_spell': '${icloud_path}/Settings/LocalDictionary'
     }
 }
 
