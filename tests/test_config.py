@@ -43,7 +43,7 @@ zh_2 = 小明
 @pytest.fixture
 def confpath(tmpdir):
     path = tmpdir.join('config.ini')
-    path.write(inicontent)
+    path.write_text(inicontent, encoding='utf-8')
     return path
 
 
@@ -128,7 +128,7 @@ def test_save_to_file(confpath):
     cm.set('sec1.option1', None)
     cm.set('sec2.zh_1', u'章三')
     cm.save_to_file()
-    new_content = confpath.read()
+    new_content = confpath.read_text(encoding='utf-8')
     assert '[sec3]' in new_content
     assert 'option2 = yes' in new_content
     assert 'option1 = sec1.option1.value.new' not in new_content
