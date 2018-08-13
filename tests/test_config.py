@@ -14,6 +14,8 @@ defaults = {
     'sec2': {
         'option1': u'sec2.option1.value',
         'optionx': u'333',
+        'zh_1': u'中文',
+        'zh_2': None,
     },
     'sec3': {
         'option1': u'true',
@@ -34,6 +36,7 @@ option2 = 222
 
 [sec2]
 option1 = sec2.option1.value.new
+zh_2 = 小明
 """
 
 
@@ -79,6 +82,9 @@ def test_get_values(confpath):
     with pytest.raises(cm.OptionNotFound):
         cm.get('secx.option1')
 
+    assert cm.get('sec2.zh_1') == u'中文'
+    assert cm.get('sec2.zh_2') == u'小明'
+
 
 def test_set_values(confpath):
     cm = ConfigManager(confpath.strpath, defaults)
@@ -98,6 +104,10 @@ def test_set_values(confpath):
     with pytest.raises(cm.OptionNotFound):
         cm.set('sec3.noexists', 'newvalue')
 
+    # zh value
+    cm.set('sec1.option1', u'哈哈')
+    assert cm.get('sec1.option1') == u'哈哈'
+
 
 def test_list_values(confpath):
     cm = ConfigManager(confpath.strpath, defaults)
@@ -116,12 +126,14 @@ def test_save_to_file(confpath):
     assert 'option1 = sec1.option1.value.new' in old_content
     cm.set('sec3.option2', u'yes')
     cm.set('sec1.option1', None)
+    cm.set('sec2.zh_1', u'章三')
     cm.save_to_file()
     new_content = confpath.read()
     assert '[sec3]' in new_content
     assert 'option2 = yes' in new_content
     assert 'option1 = sec1.option1.value.new' not in new_content
     assert 'option2 = 222' in new_content
+    assert u'zh_1 = 章三' in new_content
 
 
 def test_save_to_new_file(tmpdir):
