@@ -43,12 +43,14 @@ def cli_parse(time_string):
 
 
 def output(time):
-    timestamp = u'TIMESTAMP: ' + str(time.timestamp)
-    utc = u'ISO UTC: ' + time.to('utc').isoformat().replace('+00:00', 'Z')
-    local = u'ISO LOCAL: ' + time.to('local').isoformat()
-    human = u'HUMAN: ' + time.to('local').format(HUMAN_FORMAT)
+    lines = [
+        ('TIMESTAMP: ' + str(time.timestamp)),
+        ('ISO UTC:   ' + time.to('utc').isoformat().replace('+00:00', 'Z')),
+        ('ISO LOCAL: ' + time.to('local').isoformat()),
+        ('HUMAN:     ' + time.to('local').format(HUMAN_FORMAT))
+    ]
     click.echo()
-    click.echo(timestamp)
-    click.echo(utc)
-    click.echo(local)
-    click.echo(human)
+    for line in lines:
+        name, content = line.split(':', 1)
+        line = click.style(name + ':', fg='yellow') + content
+        click.echo(line)
