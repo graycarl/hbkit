@@ -40,26 +40,27 @@ def cli_sync_spell(g):
         f.write(u'\n'.join(sorted(local_words | remote_words)) + '\n')
         click.echo('Done.')
     click.echo('Stoping AppelSpell Daemon ... ', nl=False)
-    resp = subprocess.run(['pgrep', 'AppleSpell'], stdout=subprocess.PIPE)
-    old_pid = int(resp.stdout.strip())
-    subprocess.run(['launchctl', 'stop', 'com.apple.applespell'], check=True)
+    old_pid = int(subprocess.check_output(['pgrep', 'AppleSpell']))
+    subprocess.check_call(['launchctl', 'stop', 'com.apple.applespell'])
     for i in range(20):
         time.sleep(0.3)
-        resp = subprocess.run(['pgrep', 'AppleSpell'], stdout=subprocess.PIPE)
-        if not resp.stdout.strip():
+        try:
+            subprocess.check_output(['pgrep', 'AppleSpell'])
+        except subprocess.CalledProcessError:
             click.echo('[{}] Stopped.'.format(old_pid))
             break
     else:
         click.echo(click.style('Stopping AppleSpell failed.', fg='red'))
         raise click.Abort
     click.echo('Restarting AppelSpell Daemon ... ', nl=False)
-    subprocess.run(['launchctl', 'start', 'com.apple.applespell'], check=True)
+    subprocess.check_call(['launchctl', 'start', 'com.apple.applespell'])
     for i in range(20):
         time.sleep(0.3)
-        resp = subprocess.run(['pgrep', 'AppleSpell'], stdout=subprocess.PIPE)
-        if not resp.stdout.strip():
+        try:
+            output = subprocess.check_output(['pgrep', 'AppleSpell'])
+        except subprocess.CalledProcessError:
             continue
-        new_pid = int(resp.stdout.strip())
+        new_pid = int(output.strip())
         if new_pid == old_pid:
             continue
         click.echo('[{}] Started.'.format(new_pid))
