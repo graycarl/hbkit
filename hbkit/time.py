@@ -35,7 +35,10 @@ def cli_parse(time_string):
         except ValueError:
             continue
     else:
-        time = arrow.get(time_string)
+        if time_string.lower() == 'now':
+            time = arrow.now()
+        else:
+            time = arrow.get(time_string)
     output(time)
 
 
