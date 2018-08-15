@@ -19,9 +19,9 @@ def test_parse_time(runner):
     for key in ('utc', 'local', 'naive'):
         result = runner.invoke(time.cli_parse, [data[key]])
         print(result.output)
-        assert ('ISO UTC: ' + data.utc) in result.output
+        assert ('ISO UTC:   ' + data.utc) in result.output
         assert ('ISO LOCAL: ' + data.local) in result.output
-        assert ('HUMAN: ' + data.human) in result.output
+        assert ('HUMAN:     ' + data.human) in result.output
         assert ('TIMESTAMP: ' + data.timestamp) in result.output
     # When use timestamp as input, microsecond is lost
     now = now.replace(microsecond=0)
@@ -35,9 +35,9 @@ def test_parse_time(runner):
     )
     result = runner.invoke(time.cli_parse, [data.timestamp])
     print(result.output)
-    assert ('ISO UTC: ' + data.utc) in result.output
+    assert ('ISO UTC:   ' + data.utc) in result.output
     assert ('ISO LOCAL: ' + data.local) in result.output
-    assert ('HUMAN: ' + data.human) in result.output
+    assert ('HUMAN:     ' + data.human) in result.output
     assert ('TIMESTAMP: ' + data.timestamp) in result.output
 
 
