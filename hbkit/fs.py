@@ -125,7 +125,6 @@ class GitScheme(SyncScheme):
             raise click.Abort
 
         self.repo = pygit2.Repository(path)
-        self.author = self.repo.default_signature
 
         class Callbacks(pygit2.RemoteCallbacks):
             def credentials(self, url, username_from_url, allowed_types):
@@ -146,11 +145,13 @@ class GitScheme(SyncScheme):
     def pre_sync(self):
         # check status
         status = self.repo.status()
-        if status & pygit2.GIT_STATUS_CONFLICTED:
+        if any(map(lambda v: v & pygit2.GIT_STATUS_CONFLICTED,
+                   status.values())):
             logging.warning('The repo is in conflict status, ignore syncing.')
             raise self.ConflictFound
 
     def confirm_local(self):
+        author = self.repo.default_signature
         index = self.repo.index
         diff = index.diff_to_workdir()
         if not diff:
@@ -162,7 +163,7 @@ class GitScheme(SyncScheme):
             index.write()
             tree_id = index.write_tree()
             message = self._commit_message()
-            self.repo.create_commit('HEAD', self.author, self.author,
+            self.repo.create_commit('HEAD', author, author,
                                     message, tree_id, [self.repo.head.target])
 
     def fetch_remote(self):
@@ -172,6 +173,7 @@ class GitScheme(SyncScheme):
         logging.debug('Fetch remote done.')
 
     def merge_changes(self):
+        author = self.repo.default_signature
         # see: https://github.com/MichaelBoselowitz/pygit2-examples
         remote = self.repo.lookup_reference('refs/remotes/origin/master')
         result, _ = self.repo.merge_analysis(remote.target)
@@ -193,7 +195,7 @@ class GitScheme(SyncScheme):
 
             tree = self.repo.index.write_tree()
             self.repo.create_commit(
-                'HEAD', self.author, self.author, 'Merge!', tree,
+                'HEAD', author, author, 'Merge!', tree,
                 [self.repo.head.target, remote.target])
             # We need to do this or git CLI will think we are still merging.
             self.repo.state_cleanup()
