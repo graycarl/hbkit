@@ -5,7 +5,7 @@ from future.standard_library import install_aliases
 install_aliases()
 
 from . import core, random, short, watch, git, backup, time, config, ip  # noqa
-from . import dns, mac   # noqa
+from . import dns, mac, fs   # noqa
 
 
 __version__ = '0.8.3'
@@ -42,3 +42,4 @@ cli.add_command(config.cli, 'config')
 cli.add_command(ip.cli, 'ip')
 cli.add_command(dns.cli, 'dns')
 cli.add_command(mac.cli, 'mac')
+cli.add_command(fs.cli, 'fs')
