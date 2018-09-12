@@ -143,6 +143,13 @@ class GitScheme(SyncScheme):
         hostname = platform.node()
         return self.commit_message.format(**locals())
 
+    def pre_sync(self):
+        # check status
+        status = self.repo.status()
+        if status & pygit2.GIT_STATUS_CONFLICTED:
+            logging.warning('The repo is in conflict status, ignore syncing.')
+            raise self.ConflictFound
+
     def confirm_local(self):
         index = self.repo.index
         diff = index.diff_to_workdir()
