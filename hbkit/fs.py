@@ -61,7 +61,7 @@ class Watcher(object):
         self.interval = interval
 
     def watch(self, path):
-        logging.info('Start watching.')
+        logging.info('Start watching ...zzZ...')
         mtime = self.get_mtime(path)
         logging.debug('Orginal mtime: %s', libtime.ctime(mtime))
         start_time = libtime.time()
@@ -93,7 +93,7 @@ class Watcher(object):
         for node in nodes:
             try:
                 mtimes.append(os.path.getmtime(node))
-            except IOError:
+            except OSError:
                 continue
         return max(mtimes)
 
