@@ -6,6 +6,7 @@ import click
 import logging
 import time as libtime
 import platform
+import subprocess
 try:
     import pygit2
 except ImportError:
@@ -32,12 +33,15 @@ def cli(g):
               help='Delay seconds when file changes detected.')
 @click.option('--git-commit-message', default='Update on {hostname}',
               help='Git commit message template')
-def cli_sync(path, dummy, watch, timeout, delay, git_commit_message):
+@click.option('--notify', is_flag=True,
+              help='Show notification in notification center.')
+def cli_sync(path, dummy, watch, timeout, delay, git_commit_message, notify):
     """Sync files in specified directory."""
     if dummy:
-        scheme = DummyScheme()
+        scheme = DummyScheme(path, notify)
     else:
-        scheme = decide_scheme(path, git_commit_message=git_commit_message)
+        scheme = decide_scheme(path, notify,
+                               git_commit_message=git_commit_message)
 
     # First run
     scheme.process()
@@ -65,8 +69,20 @@ class Watcher(object):
 
 
 class SyncScheme(object):
+    """Base class for SyncSchemes"""
+    def __init__(self, path, notify):
+        self.path = path
+        self.notify = notify
+
     class ConflictFound(Exception):
         pass
+
+    def _notify(self, title, content):
+        if not self.notify:
+            return
+        script = u'display notification "{content}" with title "{title}"'
+        script = script.format(**locals())
+        subprocess.call(['/usr/bin/osascript', '-e', script])
 
     def pre_sync(self):
         pass
@@ -90,6 +106,7 @@ class SyncScheme(object):
         pass
 
     def process(self):
+        self.notices = []
         self.pre_sync()
         try:
             self.confirm_local()
@@ -100,6 +117,8 @@ class SyncScheme(object):
         except Exception:
             raise
         self.post_sync()
+        if self.notices:
+            self._notify('Sync succeeded', u'\n'.join(self.notices))
 
 
 class GitScheme(SyncScheme):
@@ -107,8 +126,8 @@ class GitScheme(SyncScheme):
     class Timeout(Exception):
         pass
 
-    def __init__(self, path, commit_message):
-        self.path = path
+    def __init__(self, path, notify, commit_message):
+        super(GitScheme, self).__init__(path, notify)
         self.commit_message = commit_message
         self._init_scheme(path)
 
@@ -164,6 +183,7 @@ class GitScheme(SyncScheme):
             message = self._commit_message()
             self.repo.create_commit('HEAD', author, author,
                                     message, tree_id, [self.repo.head.target])
+            self.notices.append('Local changes committed.')
 
     def fetch_remote(self):
         logging.info('Start to fetch from remote.')
@@ -184,6 +204,7 @@ class GitScheme(SyncScheme):
             master = self.repo.lookup_reference('refs/heads/master')
             master.set_target(remote.target)
             self.repo.head.set_target(remote.target)
+            self.notices.append('Local repo fast-forward to remote version.')
         elif result & pygit2.GIT_MERGE_ANALYSIS_NORMAL:
             logging.info('Merge remote and local changes.')
             self.repo.merge(remote.target)
@@ -198,6 +219,7 @@ class GitScheme(SyncScheme):
                 [self.repo.head.target, remote.target])
             # We need to do this or git CLI will think we are still merging.
             self.repo.state_cleanup()
+            self.notices.append('Local and remote changes merged successfully.')
         else:
             raise RuntimeError('Unknown result: %s' % result)
 
@@ -210,6 +232,7 @@ class GitScheme(SyncScheme):
             origin = self.repo.remotes['origin']
             origin.push(['refs/heads/master:refs/heads/master'],
                         callbacks=self.callbacks)
+            self.notices.append('Changes pushed to remote.')
 
     def update_local(self):
         pass
@@ -243,6 +266,6 @@ class DummyScheme(SyncScheme):
         logging.info('Post sync.')
 
 
-def decide_scheme(path, **kwargs):
+def decide_scheme(path, notify, **kwargs):
     # TODO: Auto detect scheme
-    return GitScheme(path, commit_message=kwargs['git_commit_message'])
+    return GitScheme(path, notify, commit_message=kwargs['git_commit_message'])
