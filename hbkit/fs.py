@@ -13,10 +13,10 @@ except ImportError:
 
 
 @click.group('fs')
-@click.option('--debug', is_flag=True)
-def cli(debug):
+@click.pass_obj
+def cli(g):
     """FileSystem management tools."""
-    level = 'DEBUG' if debug else 'INFO'
+    level = 'DEBUG' if g.verbose else 'INFO'
     logging.basicConfig(format='%(asctime)s >> %(message)s', level=level)
 
 
@@ -67,7 +67,7 @@ class Watcher(object):
 class SyncScheme(object):
     class ConflictFound(Exception):
         pass
-    
+
     def pre_sync(self):
         pass
 
@@ -121,7 +121,6 @@ class GitScheme(SyncScheme):
                 '   brew install libgit2\n'
                 '   pip install pygit2'
             )
-            raise RuntimeError
             raise click.Abort
 
         self.repo = pygit2.Repository(path)
@@ -153,13 +152,13 @@ class GitScheme(SyncScheme):
     def confirm_local(self):
         author = self.repo.default_signature
         index = self.repo.index
-        diff = index.diff_to_workdir()
+        index.add_all()
+        diff = index.diff_to_tree(self.repo[self.repo.head.target].tree)
         if not diff:
             logging.info('No local changes need to be committed.')
         else:
             logging.debug('Show Changes:\n%s', diff.patch)
             logging.info('Commit local changes.')
-            index.add_all()
             index.write()
             tree_id = index.write_tree()
             message = self._commit_message()
