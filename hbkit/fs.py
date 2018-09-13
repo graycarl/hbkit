@@ -55,17 +55,47 @@ def cli_sync(path, dummy, watch, timeout, delay, git_commit_message, notify):
 
 class Watcher(object):
 
-    def __init__(self, timeout, delay):
+    def __init__(self, timeout, delay, interval=1):
         self.timeout = timeout
         self.delay = delay
+        self.interval = interval
 
     def watch(self, path):
         logging.info('Start watching.')
+        mtime = self.get_mtime(path)
+        logging.debug('Orginal mtime: %s', libtime.ctime(mtime))
+        start_time = libtime.time()
         try:
-            libtime.sleep(self.timeout)
-            logging.info('Timeout exceeded.')
+            while libtime.time() < start_time + self.timeout:
+                current_mtime = self.get_mtime(path)
+                logging.debug('Current mtime: %s', libtime.ctime(current_mtime))
+                if current_mtime != mtime:
+                    logging.info('File changes detected.')
+                    libtime.sleep(self.delay)
+                    break
+                else:
+                    libtime.sleep(self.interval)
+            else:
+                logging.info('Timeout exceeded.')
+                
         except KeyboardInterrupt:
             raise click.Abort
+
+    def get_mtime(self, path):
+        ignores = ['.git', '.svn']
+        nodes = []
+        for root, dirs, files in os.walk(path, topdown=True):
+            logging.debug('Walking: %s %s %s', root, dirs, files)
+            dirs[:] = [d for d in dirs if d not in ignores]
+            nodes.append(root)
+            nodes.extend([os.path.join(root, f) for f in files])
+        mtimes = []
+        for node in nodes:
+            try:
+                mtimes.append(os.path.getmtime(node))
+            except IOError:
+                continue
+        return max(mtimes)
 
 
 class SyncScheme(object):
