@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from builtins import *      # noqa
 import click
 import os
+import sys
 import time
 import subprocess
 
@@ -68,3 +69,14 @@ def cli_sync_spell(g):
     else:
         click.echo(click.style('Restarting AppleSpell failed.', fg='red'))
         raise click.Abort
+
+
+@cli.command('notify')
+@click.option('--title', default='New notification',
+              help='Notification title.')
+@click.argument('content', default=lambda: sys.stdin.read())
+def cli_notify(title, content):
+    """Show notification in Notification Center."""
+    script = u'display notification "{content}" with title "{title}"'
+    script = script.format(**locals())
+    subprocess.call(['/usr/bin/osascript', '-e', script])
