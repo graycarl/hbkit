@@ -1,8 +1,8 @@
-# 自用命令行工具
+## my own command line tool
 
 [![Build Status](https://travis-ci.org/graycarl/hbkit.svg?branch=master)](https://travis-ci.org/graycarl/hbkit)
 
-在 Python3 下开发，使用 python-future 库同时兼容 Python2。
+Developed in Python3, also work smoothly in Python2 with python-future.
 
 ```bash
 $ hbkit --help
