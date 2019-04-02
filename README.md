@@ -1,4 +1,4 @@
-# my own command line tool
+## my own command line tool
 
 [![Build Status](https://travis-ci.org/graycarl/hbkit.svg?branch=master)](https://travis-ci.org/graycarl/hbkit)
 
