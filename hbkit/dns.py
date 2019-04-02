@@ -39,6 +39,7 @@ def cli_list(client):
 @click.argument('value')
 @click.pass_obj
 def cli_add(client, name, type, value):
+    """Add new record for domain."""
     record = DNSClient.Record(name, type, value)
     client.add(record)
     click.echo('New DNS Record Created.')
@@ -50,6 +51,7 @@ def cli_add(client, name, type, value):
 @click.argument('value')
 @click.pass_obj
 def cli_set(client, name, type, value):
+    """Update a record for domain."""
     record = DNSClient.Record(name, type, value)
     try:
         client.set(record)
@@ -63,6 +65,7 @@ def cli_set(client, name, type, value):
 @click.option('--types', default='A,CNAME')
 @click.pass_obj
 def cli_delete(client, name, types):
+    """Delete a record for domain."""
     types = types.upper().split(',')
     try:
         client.delete(name, types)
