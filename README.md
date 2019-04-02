@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/graycarl/hbkit.svg?branch=master)](https://travis-ci.org/graycarl/hbkit)
 
-developed in Python3 env, also work smoothly in Python2 with python-future.
+Developed in Python3, also work smoothly in Python2 with python-future.
 
 ```bash
 $ hbkit --help
