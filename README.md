@@ -5,6 +5,7 @@
 Developed in Python3, also work smoothly in Python2 with python-future.
 
 ```bash
+$ pip install git+https://github.com/graycarl/hbkit.git
 $ hbkit --help
 Usage: hbkit [OPTIONS] COMMAND [ARGS]...
 
