@@ -5,7 +5,7 @@ from future.standard_library import install_aliases
 install_aliases()
 
 from . import core, random, short, watch, git, backup, time, config, ip  # noqa
-from . import dns, mac, fs   # noqa
+from . import dns, mac, fs, github   # noqa
 
 
 __version__ = '0.9.0'
@@ -43,3 +43,4 @@ cli.add_command(ip.cli, 'ip')
 cli.add_command(dns.cli, 'dns')
 cli.add_command(mac.cli, 'mac')
 cli.add_command(fs.cli, 'fs')
+cli.add_command(github.cli, 'github')
