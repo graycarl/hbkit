@@ -4,7 +4,7 @@ from builtins import *      # noqa
 import mock
 import copy
 import arrow
-from hbkit.lib import GithubClient
+from hbkit import github, lib
 
 travis_responses = {
     'branch': {
@@ -111,17 +111,17 @@ travis_responses = {
 }
 
 
+def mock_server(method, path):
+    if method == 'get' and path.startswith('/repo'):
+        data = copy.deepcopy(travis_responses['branch'])
+    if method == 'get' and path.startswith('/build'):
+        data = copy.deepcopy(travis_responses['build'])
+    return data
+
+
 def test_client_check_ci():
-    c = GithubClient()
-
-    def _side(method, path):
-        if method == 'get' and path.startswith('/repo'):
-            data = copy.deepcopy(travis_responses['branch'])
-        if method == 'get' and path.startswith('/build'):
-            data = copy.deepcopy(travis_responses['build'])
-        return data
-
-    c._request_travis = mock.Mock(side_effect=_side)
+    c = lib.GithubClient()
+    c._request_travis = mock.Mock(side_effect=mock_server)
     lines = '\n'.join(c.check_ci('repo_name'))
     assert 'Status: Passed' in lines
     assert (
@@ -133,3 +133,10 @@ def test_client_check_ci():
     c._request_travis.assert_any_call('get', '/repo/repo_name/branch/master')
     c._request_travis.assert_any_call(
         'get', travis_responses['branch']['last_build']['@href'])
+
+
+def test_check_ci(runner):
+    lib.GithubClient._request_travis = mock.Mock(side_effect=mock_server)
+    g = mock.Mock(repo='name')
+    result = runner.invoke(github.cli_check_ci, [], obj=g)
+    assert 'Status: Passed' in result.output
