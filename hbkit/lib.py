@@ -287,6 +287,6 @@ class GithubClient(object):
         data = dict(status=resp['state'].capitalize(),
                     time=arrow.get(resp['started_at']).to('local').isoformat(),
                     commit_id=resp['commit']['sha'][:10],
-                    commit_msg=resp['commit']['message'])
+                    commit_msg=resp['commit']['message'].split('\n')[0])
         for line in lines:
             yield line.format(**data)
