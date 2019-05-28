@@ -4,6 +4,7 @@ from builtins import *      # noqa
 import os
 import click
 import logging
+import threading
 import time as libtime
 import platform
 import subprocess
@@ -77,7 +78,7 @@ class Watcher(object):
                     libtime.sleep(self.interval)
             else:
                 logging.info('Timeout exceeded.')
-                
+
         except KeyboardInterrupt:
             raise click.Abort
 
@@ -160,6 +161,7 @@ class GitScheme(SyncScheme):
         super(GitScheme, self).__init__(path, notify)
         self.commit_message = commit_message
         self._init_scheme(path)
+        self.timeout = 0.5
 
     def _init_scheme(self, path):
         if not pygit2:
@@ -218,8 +220,20 @@ class GitScheme(SyncScheme):
     def fetch_remote(self):
         logging.info('Start to fetch from remote.')
         origin = self.repo.remotes['origin']
-        origin.fetch(callbacks=self.callbacks)
-        logging.debug('Fetch remote done.')
+        # pygit2 do not support `timeout` peremeter, so I need to implement
+        # the feature by using threading.
+        # By settings the daemon = True, we can terminate the blocked
+        # fetching thread by exit the main thread.
+        t = threading.Thread(target=origin.fetch,
+                             kwargs={'callbacks': self.callbacks},
+                             daemon=True)
+        t.start()
+        t.join(timeout=self.timeout)
+        if t.is_alive():
+            logging.error('Fetching remote timeout.')
+            raise self.Timeout
+        else:
+            logging.debug('Fetch remote done.')
 
     def merge_changes(self):
         author = self.repo.default_signature
