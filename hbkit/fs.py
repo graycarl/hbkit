@@ -225,8 +225,8 @@ class GitScheme(SyncScheme):
         # By settings the daemon = True, we can terminate the blocked
         # fetching thread by exit the main thread.
         t = threading.Thread(target=origin.fetch,
-                             kwargs={'callbacks': self.callbacks},
-                             daemon=True)
+                             kwargs={'callbacks': self.callbacks})
+        t.daemon = True
         t.start()
         t.join(timeout=self.timeout)
         if t.is_alive():
