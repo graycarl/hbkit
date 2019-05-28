@@ -161,7 +161,7 @@ class GitScheme(SyncScheme):
         super(GitScheme, self).__init__(path, notify)
         self.commit_message = commit_message
         self._init_scheme(path)
-        self.timeout = 0.5
+        self.timeout = 10
 
     def _init_scheme(self, path):
         if not pygit2:
