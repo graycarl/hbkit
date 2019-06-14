@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from builtins import *      # noqa
 import click
 import dns.resolver
-from .lib import DNSPodClient, DNSClient
+from .libs import DNSPodClient, DNSClient
 
 
 @click.group('dns')

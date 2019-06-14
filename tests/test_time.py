@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from builtins import *      # noqa
 import arrow
 from hbkit import time
-from hbkit.lib import Namespace
+from hbkit.libs import Namespace
 
 
 def test_parse_time(runner):

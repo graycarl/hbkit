@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from builtins import *      # noqa
 import click
-from hbkit.lib import GithubClient
+from hbkit.libs import GithubClient
 
 
 @click.group('github')
