@@ -2,6 +2,10 @@
 from __future__ import absolute_import
 from builtins import *      # noqa
 import os
+import sys
+import logging
+import click
+import requests
 from .lib import ConfigManager
 
 
@@ -30,3 +34,24 @@ class Global(object):
         self.config = ConfigManager(
             os.path.expanduser(confpath), config_defaults)
         self.verbose = verbose
+
+
+class Group(click.Group):
+
+    def main(self, *args, **kwargs):
+        try:
+            super(Group, self).main(*args, **kwargs)
+        except requests.exceptions.SSLError as e:
+            if sys.version.startswith('3') and \
+                    'SSLV3_ALERT_HANDSHAKE_FAILURE' in str(e):
+                logging.exception('Request failed on SSLError')
+                message = [
+                    "SSL lib may broken in current Python version."
+                    "You should install some additional package to fix it:"
+                    "\t sudo apt install -y python3-dev libffi-dev libssl-dev"
+                    "\t pip install requests[security]"
+                    "See: https://stackoverflow.com/a/42028935"
+                ]
+                raise click.ClickException('\n'.join(message))
+            else:
+                raise

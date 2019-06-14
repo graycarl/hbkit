@@ -18,7 +18,7 @@ def print_version(ctx, param, value):
     ctx.exit()
 
 
-@click.group()
+@click.group(cls=core.Group)
 @click.option('--version', is_flag=True, callback=print_version,
               expose_value=False, is_eager=True,
               help='Print out current version.')
