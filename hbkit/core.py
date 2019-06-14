@@ -51,5 +51,5 @@ class Group(click.Group):
                     "\t pip install requests[security]"
                     "See: https://stackoverflow.com/a/42028935"
                 ]
-                click.echo(message, err=True)
+                click.echo('\n'.join(message), err=True)
             raise
