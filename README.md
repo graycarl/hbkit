@@ -11,7 +11,7 @@ Usage: hbkit [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --version      Print out current version.
-  --config PATH  The config file path.  [default: ~/.config/hbkit/hbkit.ini]
+  --config FILE  The config file path.  [default: ~/.config/hbkit/hbkit.ini]
   -v, --verbose  Print execution details.
   --help         Show this message and exit.
 
@@ -19,8 +19,11 @@ Commands:
   backup      Make a backup copy for file or directory.
   config      Commands about configuration management.
   dns         DNS Management Commands.
+  fs          FileSystem management tools.
   git         Tools for git.
+  github      Tools about github.
   ip          Tools about ip address.
+  mac         Tools for living in macOS.
   random      Generate random string.
   short       Shorten your url.
   time        Tools about date & time.
