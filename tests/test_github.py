@@ -4,114 +4,117 @@ from builtins import *      # noqa
 import mock
 import copy
 import arrow
+import urllib.request
 from hbkit import github, lib
 
 travis_responses = {
     'branch': {
-        "@href": "/repo/13873553/branch/master",
-        "@representation": "standard",
-        "@type": "branch",
+        "@href": u"/repo/13873553/branch/master",
+        "@representation": u"standard",
+        "@type": u"branch",
         "default_branch": True,
         "exists_on_github": True,
         "last_build": {
-            "@href": "/build/518788878",
-            "@representation": "minimal",
-            "@type": "build",
+            "@href": u"/build/518788878",
+            "@representation": u"minimal",
+            "@type": u"build",
             "duration": 61,
-            "event_type": "push",
-            "finished_at": "2019-04-11T14:05:40Z",
+            "event_type": u"push",
+            "finished_at": u"2019-04-11T14:05:40Z",
             "id": 518788878,
-            "number": "86",
-            "previous_state": "passed",
+            "number": u"86",
+            "previous_state": u"passed",
             "private": False,
             "pull_request_number": None,
             "pull_request_title": None,
-            "started_at": "2019-04-11T14:05:02Z",
-            "state": "passed"
+            "started_at": u"2019-04-11T14:05:02Z",
+            "state": u"passed"
         },
-        "name": "master",
+        "name": u"master",
         "repository": {
-            "@href": "/repo/13873553",
-            "@representation": "minimal",
-            "@type": "repository",
+            "@href": u"/repo/13873553",
+            "@representation": u"minimal",
+            "@type": u"repository",
             "id": 13873553,
-            "name": "hbkit",
-            "slug": "graycarl/hbkit"
+            "name": u"hbkit",
+            "slug": u"graycarl/hbkit"
         }
     },
     'build': {
-        "@href": "/build/518788878",
+        "@href": u"/build/518788878",
         "@permissions": {
             "cancel": False,
             "read": True,
             "restart": False
         },
-        "@representation": "standard",
-        "@type": "build",
+        "@representation": u"standard",
+        "@type": u"build",
         "branch": {
-            "@href": "/repo/13873553/branch/master",
-            "@representation": "minimal",
-            "@type": "branch",
-            "name": "master"
+            "@href": u"/repo/13873553/branch/master",
+            "@representation": u"minimal",
+            "@type": u"branch",
+            "name": u"master"
         },
         "commit": {
-            "@representation": "minimal",
-            "@type": "commit",
-            "committed_at": "2019-04-11T14:04:29Z",
-            "compare_url": "https://github.com/graycarl/hbkit/compare/....",
+            "@representation": u"minimal",
+            "@type": u"commit",
+            "committed_at": u"2019-04-11T14:04:29Z",
+            "compare_url": u"https://github.com/graycarl/hbkit/compare/....",
             "id": 156484214,
-            "message": "Update README.md",
-            "ref": "refs/heads/master",
-            "sha": "3207b8e34903913c5b7d77a5ce310ea1176e641d"
+            "message": u"Update README.md",
+            "ref": u"refs/heads/master",
+            "sha": u"3207b8e34903913c5b7d77a5ce310ea1176e641d"
         },
         "created_by": {
-            "@href": "/user/527960",
-            "@representation": "minimal",
-            "@type": "user",
+            "@href": u"/user/527960",
+            "@representation": u"minimal",
+            "@type": u"user",
             "id": 527960,
-            "login": "graycarl"
+            "login": u"graycarl"
         },
         "duration": 61,
-        "event_type": "push",
-        "finished_at": "2019-04-11T14:05:40Z",
+        "event_type": u"push",
+        "finished_at": u"2019-04-11T14:05:40Z",
         "id": 518788878,
         "jobs": [
             {
-                "@href": "/job/518788879",
-                "@representation": "minimal",
-                "@type": "job",
+                "@href": u"/job/518788879",
+                "@representation": u"minimal",
+                "@type": u"job",
                 "id": 518788879
             },
             {
-                "@href": "/job/518788880",
-                "@representation": "minimal",
-                "@type": "job",
+                "@href": u"/job/518788880",
+                "@representation": u"minimal",
+                "@type": u"job",
                 "id": 518788880
             }
         ],
-        "number": "86",
-        "previous_state": "passed",
+        "number": u"86",
+        "previous_state": u"passed",
         "private": False,
         "pull_request_number": None,
         "pull_request_title": None,
         "repository": {
-            "@href": "/repo/13873553",
-            "@representation": "minimal",
-            "@type": "repository",
+            "@href": u"/repo/13873553",
+            "@representation": u"minimal",
+            "@type": u"repository",
             "id": 13873553,
-            "name": "hbkit",
-            "slug": "graycarl/hbkit"
+            "name": u"hbkit",
+            "slug": u"graycarl/hbkit"
         },
         "stages": [],
-        "started_at": "2019-04-11T14:05:02Z",
-        "state": "passed",
+        "started_at": u"2019-04-11T14:05:02Z",
+        "state": u"passed",
         "tag": None,
-        "updated_at": "2019-04-11T14:05:40.816Z"
+        "updated_at": u"2019-04-11T14:05:40.816Z"
     }
 }
 
 
 def mock_server(method, path):
+    # Check for: https://github.com/graycarl/hbkit/issues/39
+    urllib.request.urljoin(lib.GithubClient.travis_api, path)
     if method == 'get' and path.startswith('/repo'):
         data = copy.deepcopy(travis_responses['branch'])
     if method == 'get' and path.startswith('/build'):
