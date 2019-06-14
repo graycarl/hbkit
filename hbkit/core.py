@@ -44,7 +44,6 @@ class Group(click.Group):
         except requests.exceptions.SSLError as e:
             if sys.version.startswith('3') and \
                     'SSLV3_ALERT_HANDSHAKE_FAILURE' in str(e):
-                logging.exception('Request failed on SSLError')
                 message = [
                     "SSL lib may broken in current Python version."
                     "You should install some additional package to fix it:"
@@ -52,6 +51,5 @@ class Group(click.Group):
                     "\t pip install requests[security]"
                     "See: https://stackoverflow.com/a/42028935"
                 ]
-                raise click.ClickException('\n'.join(message))
-            else:
-                raise
+                click.echo(message, err=True)
+            raise
