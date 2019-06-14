@@ -45,11 +45,11 @@ class Group(click.Group):
             if sys.version.startswith('3') and \
                     'SSLV3_ALERT_HANDSHAKE_FAILURE' in str(e):
                 message = [
-                    "SSL lib may broken in current Python version."
-                    "You should install some additional package to fix it:"
-                    "\t sudo apt install -y python3-dev libffi-dev libssl-dev"
-                    "\t pip install requests[security]"
-                    "See: https://stackoverflow.com/a/42028935"
+                    "SSL lib may broken in current Python version.",
+                    "You should install some additional package to fix it:",
+                    "\t sudo apt install -y python3-dev libffi-dev libssl-dev",
+                    "\t pip install requests[security]",
+                    "See: https://stackoverflow.com/a/42028935",
                 ]
                 click.echo('\n'.join(message), err=True)
             raise
