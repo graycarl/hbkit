@@ -54,4 +54,4 @@ def iter_github_repos_from_remotes(remotes):
     for remote in remotes:
         match =  re.match(p, remote)
         if match:
-            yield match[2]
+            yield match.group(2)
