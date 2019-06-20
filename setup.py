@@ -14,7 +14,7 @@ with open('hbkit/__init__.py', 'rb') as f:
 setup(
     name='hbkit',
     version=version,
-    packages=['hbkit'],
+    packages=['hbkit', 'hbkit.libs'],
     install_requires=['click>=5.0', 'requests>=2.0', 'future>=0.16',
                       'arrow>=0.12', 'configparser>=3.5', 'dnspython>=1.15'],
     extras_require=dict(dev=['mock', 'pytest']),
