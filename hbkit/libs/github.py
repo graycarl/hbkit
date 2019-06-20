@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from builtins import *      # noqa
+import re
 import arrow
 import urllib
 import logging
@@ -46,3 +47,11 @@ class GithubClient(object):
                     commit_msg=resp['commit']['message'].split('\n')[0])
         for line in lines:
             yield line.format(**data)
+
+
+def iter_github_repos_from_remotes(remotes):
+    p = r'(https?://github.com/|git@github.com:)(\w+/\w+)\.git'
+    for remote in remotes:
+        match =  re.match(p, remote)
+        if match:
+            yield match[2]

@@ -143,3 +143,19 @@ def test_check_ci(runner):
     g = mock.Mock(repo='name')
     result = runner.invoke(github.cli_check_ci, [], obj=g)
     assert 'Status: Passed' in result.output
+
+
+def test_iter_github_repos_from_remotes():
+    remotes = [
+        'https://github.com/graycarl/aa.git',
+        'http://github.com/graycarl/bb.git',
+        'http://gitlab.com/graycarl/cc.git',
+        'git@github.com:graycarl/dd.git',
+        'git@other.com:graycarl/ee.git',
+    ]
+    expect = [
+        'graycarl/aa',
+        'graycarl/bb',
+        'graycarl/dd'
+    ]
+    assert list(libs.github.iter_github_repos_from_remotes(remotes)) == expect
