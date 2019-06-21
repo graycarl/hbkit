@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from builtins import *      # noqa
 import uuid
 import pytest
-from hbkit.libs import DNSClient
+from hbkit.libs.dns import DNSClient
 
 
 class DummyClient(DNSClient):

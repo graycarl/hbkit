@@ -69,7 +69,8 @@ class Watcher(object):
         try:
             while libtime.time() < start_time + self.timeout:
                 current_mtime = self.get_mtime(path)
-                logging.debug('Current mtime: %s', libtime.ctime(current_mtime))
+                logging.debug('Current mtime: %s',
+                              libtime.ctime(current_mtime))
                 if current_mtime != mtime:
                     logging.info('File changes detected.')
                     libtime.sleep(self.delay)
@@ -101,6 +102,7 @@ class Watcher(object):
 
 class SyncScheme(object):
     """Base class for SyncSchemes"""
+
     def __init__(self, path, notify):
         self.path = path
         self.notify = notify
@@ -263,7 +265,7 @@ class GitScheme(SyncScheme):
                 [self.repo.head.target, remote.target])
             # We need to do this or git CLI will think we are still merging.
             self.repo.state_cleanup()
-            self.notices.append('Local and remote changes merged successfully.')
+            self.notices.append('Local and remote merged successfully.')
         else:
             raise RuntimeError('Unknown result: %s' % result)
 

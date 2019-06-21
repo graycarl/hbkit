@@ -5,7 +5,8 @@ import mock
 import copy
 import arrow
 import urllib.request
-from hbkit import github, libs
+from hbkit import github
+from hbkit.libs.github import GithubClient, iter_github_repos_from_remotes
 
 travis_responses = {
     'branch': {
@@ -114,7 +115,7 @@ travis_responses = {
 
 def mock_server(method, path):
     # Check for: https://github.com/graycarl/hbkit/issues/39
-    urllib.request.urljoin(libs.GithubClient.travis_api, path)
+    urllib.request.urljoin(GithubClient.travis_api, path)
     if method == 'get' and path.startswith('/repo'):
         data = copy.deepcopy(travis_responses['branch'])
     if method == 'get' and path.startswith('/build'):
@@ -123,7 +124,7 @@ def mock_server(method, path):
 
 
 def test_client_check_ci():
-    c = libs.GithubClient()
+    c = GithubClient()
     c._request_travis = mock.Mock(side_effect=mock_server)
     lines = '\n'.join(c.check_ci('repo_name'))
     assert 'Status: Passed' in lines
@@ -139,7 +140,7 @@ def test_client_check_ci():
 
 
 def test_check_ci(runner):
-    libs.GithubClient._request_travis = mock.Mock(side_effect=mock_server)
+    GithubClient._request_travis = mock.Mock(side_effect=mock_server)
     g = mock.Mock(repo='name')
     result = runner.invoke(github.cli_check_ci, [], obj=g)
     assert 'Status: Passed' in result.output
@@ -158,4 +159,4 @@ def test_iter_github_repos_from_remotes():
         'graycarl/bb',
         'graycarl/dd'
     ]
-    assert list(libs.github.iter_github_repos_from_remotes(remotes)) == expect
+    assert list(iter_github_repos_from_remotes(remotes)) == expect

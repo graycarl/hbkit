@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from builtins import *      # noqa
 import pytest
 from hbkit import core, config
-from hbkit.libs import ConfigManager
+from hbkit.libs.config import ConfigManager
 
 
 defaults = {

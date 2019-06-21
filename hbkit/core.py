@@ -6,7 +6,7 @@ import sys
 import logging
 import click
 import requests
-from .libs import ConfigManager
+from .libs.config import ConfigManager
 
 
 config_defaults = {
