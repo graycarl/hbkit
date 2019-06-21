@@ -17,7 +17,8 @@ setup(
     packages=['hbkit', 'hbkit.libs'],
     install_requires=['click>=5.0', 'requests>=2.0', 'future>=0.16',
                       'arrow>=0.12', 'configparser>=3.5', 'dnspython>=1.15'],
-    extras_require=dict(dev=['mock', 'pytest']),
+    extras_require=dict(dev=['mock', 'pytest', 'python-language-server',
+                             'pyflakes', 'pycodestyle']),
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'mock'],
     entry_points={
