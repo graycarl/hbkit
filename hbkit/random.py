@@ -11,6 +11,7 @@ import subprocess
 
 
 def output(str):
+    global pbcopy
     click.secho('Random Output:', fg='green')
     click.echo(str)
     if pbcopy:
@@ -20,7 +21,7 @@ def output(str):
     try:
         fd = os.open('/tmp/hbkit-latest-random',
                      os.O_WRONLY | os.O_CREAT, 0o222)
-    except:
+    except Exception:
         pass
     else:
         with io.open(fd, 'w') as f:

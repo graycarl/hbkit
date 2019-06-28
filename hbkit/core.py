@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from builtins import *      # noqa
 import os
 import sys
-import logging
 import click
 import requests
 from .libs.config import ConfigManager

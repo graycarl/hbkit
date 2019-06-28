@@ -17,7 +17,8 @@ def cli(g, repo):
             with open(os.path.join(root, '.git', 'config')) as f:
                 remotes = libs.git.iter_remotes_from_git_config(f.read())
                 try:
-                    repo = next(libs.github.iter_github_repos_from_remotes(remotes))
+                    repo = next(
+                        libs.github.iter_github_repos_from_remotes(remotes))
                     click.echo('Using repo from current project: %s' % repo)
                 except StopIteration:
                     pass

@@ -52,6 +52,6 @@ class GithubClient(object):
 def iter_github_repos_from_remotes(remotes):
     p = r'(https?://github.com/|git@github.com:)(\w+/\w+)\.git'
     for remote in remotes:
-        match =  re.match(p, remote)
+        match = re.match(p, remote)
         if match:
             yield match.group(2)
