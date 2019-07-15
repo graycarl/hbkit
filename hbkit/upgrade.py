@@ -6,7 +6,7 @@ except ImportError:
     from pip._internal import main as pipmain
 
 
-@click.command('upgrade')
+@click.command('upgrade', help='Upgrade hbkit from github.')
 @click.option('--source', default='https://github.com/graycarl/hbkit.git',
               help='Upgrade source')
 def cli(source):
