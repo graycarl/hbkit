@@ -59,4 +59,4 @@ def cli_number(length):
 def cli_uuid(split):
     """Generate uuid."""
     u = uuid.uuid4()
-    output(str(u) if split else u.hex)
+    output(str(u) if split else str(u.hex))
