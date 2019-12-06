@@ -4,6 +4,10 @@ try:
     from pip import main as pipmain
 except ImportError:
     from pip._internal import main as pipmain
+    try:
+        pipmain = pipmain.main
+    except AttributeError:
+        pass
 
 
 @click.command('upgrade', help='Upgrade hbkit from github.')
