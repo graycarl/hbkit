@@ -5,7 +5,7 @@ from future.standard_library import install_aliases
 install_aliases()
 
 from . import core, random, short, watch, git, backup, time, config, ip  # noqa
-from . import dns, mac, fs, github, upgrade   # noqa
+from . import dns, mac, fs, github, upgrade, yaml   # noqa
 
 
 __version__ = '0.9.2'
@@ -45,3 +45,4 @@ cli.add_command(mac.cli, 'mac')
 cli.add_command(fs.cli, 'fs')
 cli.add_command(github.cli, 'github')
 cli.add_command(upgrade.cli, 'upgrade')
+cli.add_command(yaml.cli, 'yaml')
