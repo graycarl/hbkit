@@ -24,4 +24,4 @@ def cli():
 def cli_from_json(input):
     """Generate yaml string from json content."""
     data = json.loads(input.read())
-    click.echo(yaml.dump(data))
+    click.echo(yaml.safe_dump(data, allow_unicode=True))
