@@ -37,6 +37,8 @@ def cli_parse(time_string):
     else:
         if time_string.lower() == 'now':
             time = arrow.now()
+        elif time_string.isnumeric():
+            time = arrow.get(float(time_string))
         else:
             time = arrow.get(time_string)
     output(time)
