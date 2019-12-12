@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from builtins import *   # noqa
 import os
 import click
+import urllib
 import logging
 import platform
 import threading
@@ -146,6 +147,35 @@ class GitScheme(SyncScheme):
                     return pygit2.Keypair(
                         "git", os.path.expanduser('~/.ssh/id_rsa.pub'),
                         os.path.expanduser('~/.ssh/id_rsa'), "")
+                elif allowed_types & pygit2.credentials.GIT_CREDTYPE_USERPASS_PLAINTEXT:  # noqa
+                    # try to read from git-credential-helper
+                    parts = urllib.parse.urlparse(url)
+                    logging.debug(
+                        'Tring to get credential from git-credential: %s %s',
+                        parts.scheme, parts.netloc
+                    )
+                    stdin = 'protocol={0.scheme}\nhost={0.netloc}\n' \
+                            .format(parts)
+                    try:
+                        result = subprocess.run(
+                            ['git', 'credential', 'fill'],
+                            input=stdin.encode('utf-8'),
+                            capture_output=True,
+                            check=True)
+                        for line in result.stdout.decode('utf-8').split('\n'):
+                            logging.debug('Got line: %s', line)
+                            if line.startswith('username='):
+                                username = line.split('=', 1)[1]
+                            elif line.startswith('password='):
+                                password = line.split('=', 1)[1]
+                        logging.debug('Got %r %r', username, password)
+                        return pygit2.UserPass(username, password)
+                    except Exception:
+                        # When libgit2 callback do not print traceback when
+                        # error, we do it manually.
+                        logging.exception(
+                            'Error when get credential from git-credential')
+                    return None
                 else:
                     return None
         self.callbacks = Callbacks()
