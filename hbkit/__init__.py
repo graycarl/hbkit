@@ -5,10 +5,10 @@ from future.standard_library import install_aliases
 install_aliases()
 
 from . import core, random, short, watch, git, backup, time, config, ip  # noqa
-from . import dns, mac, fs, github, upgrade, yaml   # noqa
+from . import dns, mac, fs, github, upgrade, yaml, clash   # noqa
 
 
-__version__ = '0.9.4'
+__version__ = '0.9.5'
 
 
 def print_version(ctx, param, value):
@@ -46,3 +46,4 @@ cli.add_command(fs.cli, 'fs')
 cli.add_command(github.cli, 'github')
 cli.add_command(upgrade.cli, 'upgrade')
 cli.add_command(yaml.cli, 'yaml')
+cli.add_command(clash.cli, 'clash')

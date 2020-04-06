@@ -1,0 +1,76 @@
+# port of HTTP
+port: 7890
+
+# port of SOCKS5
+socks-port: 7891
+
+# redir port for Linux and macOS
+redir-port: 7892
+
+allow-lan: true
+bind-address: "192.168.50.1"
+
+# Rule / Global / Direct (default is Rule)
+mode: Rule
+
+# set log level to stdout (default is info)
+# info / warning / error / debug / silent
+log-level: info
+
+# RESTful API for clash
+external-controller: 192.168.50.1:9090
+
+hosts:
+  router.asus.com: 192.168.50.1
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  enhanced-mode: redir-host
+  nameserver:
+    - 114.114.114.114
+    - 223.5.5.5
+  fallback:
+    - 8.8.8.8
+
+proxies:
+
+proxy-groups:
+  # url-test select which proxy will be used by benchmarking speed to a URL.
+  - name: "FAST"
+    type: url-test
+    proxies:
+      - proxy1
+      - proxy2
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+
+  - name: "FALLBACK"
+    type: fallback
+    proxies:
+      - proxy1
+      - proxy2
+    url: 'http://www.gstatic.com/generate_204'
+    interval: 300
+
+  - name: "SPECIFY"
+    type: select
+    proxies:
+      - proxy1
+      - proxy2
+
+  - name: PROXY
+    type: select
+    proxies:
+      - FAST
+      - FALLBACK
+      - SPECIFY
+      - DIRECT
+  
+rules:
+  - DOMAIN-SUFFIX,google.com,PROXY
+  - DOMAIN-KEYWORD,google,PROXY
+  - DOMAIN,google.com,PROXY
+  - DOMAIN-SUFFIX,ad.com,REJECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,PROXY
