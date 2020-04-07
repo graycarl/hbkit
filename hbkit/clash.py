@@ -23,9 +23,13 @@ def cli():
 @cli.command('build-config')
 @click.option('--template', type=click.File('r', encoding='utf-8'),
               help='The template file.')
+@click.option('--proxy-type',
+              type=click.Choice([
+                  'ss', 'vmess', 'http', 'snell', 'socks5', 'trojan']),
+              help='Filter by proxy type')
 @click.argument('origin', type=click.File('r', encoding='utf-8'),
                 default=sys.stdin)
-def cli_build_config(template, origin):
+def cli_build_config(template, origin, proxy_type):
     """Build new config from origin according to template"""
     if not template:
         template = pkg_resources \
@@ -37,6 +41,8 @@ def cli_build_config(template, origin):
     template = ordered_load(template)
     origin = ordered_load(origin.read())
     proxies = origin.get('proxies') or origin.get('Proxy')
+    if proxy_type:
+        proxies = list(filter(lambda p: p['type'] == proxy_type, proxies))
     template['proxies'] = proxies
     for group in template['proxy-groups']:
         if group['name'] in ['FAST', 'FALLBACK', 'SPECIFY']:
