@@ -42,7 +42,7 @@ proxy-groups:
       - proxy1
       - proxy2
     url: 'http://www.gstatic.com/generate_204'
-    interval: 300
+    interval: 60
 
   - name: "FALLBACK"
     type: fallback
@@ -50,7 +50,7 @@ proxy-groups:
       - proxy1
       - proxy2
     url: 'http://www.gstatic.com/generate_204'
-    interval: 300
+    interval: 60
 
   - name: "SPECIFY"
     type: select
