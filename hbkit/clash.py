@@ -27,9 +27,11 @@ def cli():
               type=click.Choice([
                   'ss', 'vmess', 'http', 'snell', 'socks5', 'trojan']),
               help='Filter by proxy type')
+@click.option('--reverse', is_flag=True,
+              help='Reverse proxy order')
 @click.argument('origin', type=click.File('r', encoding='utf-8'),
                 default=sys.stdin)
-def cli_build_config(template, origin, proxy_type):
+def cli_build_config(template, origin, proxy_type, reverse):
     """Build new config from origin according to template"""
     if not template:
         template = pkg_resources \
@@ -43,6 +45,8 @@ def cli_build_config(template, origin, proxy_type):
     proxies = origin.get('proxies') or origin.get('Proxy')
     if proxy_type:
         proxies = list(filter(lambda p: p['type'] == proxy_type, proxies))
+    if reverse:
+        proxies = list(reversed(proxies))
     template['proxies'] = proxies
     for group in template['proxy-groups']:
         if group['name'] in ['FAST', 'FALLBACK', 'SPECIFY']:
