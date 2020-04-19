@@ -4,11 +4,11 @@ import click
 from future.standard_library import install_aliases
 install_aliases()
 
-from . import core, random, short, watch, git, backup, time, config, ip  # noqa
+from . import core, random, git, backup, time, config, ip  # noqa
 from . import dns, mac, fs, github, upgrade, yaml, clash   # noqa
 
 
-__version__ = '0.9.5'
+__version__ = '0.9.6'
 
 
 def print_version(ctx, param, value):
@@ -33,8 +33,6 @@ def cli(context, confpath, verbose):
 
 
 cli.add_command(random.cli, 'random')
-cli.add_command(short.cli, 'short')
-cli.add_command(watch.cli, 'watch-urls')
 cli.add_command(git.cli, 'git')
 cli.add_command(backup.cli, 'backup')
 cli.add_command(time.cli, 'time')
