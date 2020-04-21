@@ -8,15 +8,6 @@ def parent_branch(repo, branch):
     return 'Parent'
 
 
-pygit2_install_help = """\
-This command need pygit2 to be installed.
-If you are in MacOS, do this:
-
-    brew install libgit2
-    pip install pygit2
-"""
-
-
 @click.group('git')
 @click.option('--path',
               type=click.Path(exists=True, file_okay=False, dir_okay=True))
@@ -26,7 +17,7 @@ def cli(ctx, path):
     try:
         import pygit2   # noqa
     except ImportError:
-        click.echo(pygit2_install_help)
+        click.echo("You need to install pygit2 before run this command")
         ctx.exit(1)
     if not path:
         path = os.path.abspath('.')
