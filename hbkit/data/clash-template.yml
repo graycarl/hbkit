@@ -82,6 +82,7 @@ rules:
   - DOMAIN-KEYWORD,google,PROXY
   - DOMAIN,google.com,PROXY
   - DOMAIN-SUFFIX,ad.com,REJECT
+  - DOMAIN-SUFFIX,dl.playstation.net,DIRECT
   - IP-CIDR,127.0.0.0/8,DIRECT
   - GEOIP,CN,DIRECT
   - MATCH,PROXY
