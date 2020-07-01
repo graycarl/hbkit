@@ -163,7 +163,7 @@ def test_command_list(confpath, monkeypatch, runner):
 def test_command_set(confpath, monkeypatch, runner):
     monkeypatch.setattr(core, 'config_defaults', defaults)
     g = core.Global(confpath.strpath)
-    runner.invoke(config.cli_set, ['sec1.option1', 'set_value_1'], obj=g)
+    runner.invoke(config.cli_set, ['sec1.option1', u'set_value_1'], obj=g)
     new_content = confpath.read()
     assert 'option1 = set_value_1' in new_content
     assert 'option1 = sec1.option1.value.new' not in new_content

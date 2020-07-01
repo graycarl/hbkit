@@ -6,15 +6,21 @@ from hbkit import time
 from hbkit.libs.datastructures import Namespace
 
 
+def u(s):
+    if not isinstance(s, str):
+        return s.decode()
+    return s
+
+
 def test_parse_time(runner):
     now = arrow.now()
     data = Namespace(
         arrow=now,
         timestamp=str(now.timestamp),
-        utc=now.to('utc').isoformat().replace('+00:00', 'Z'),
-        local=now.isoformat(),
-        naive=now.to('local').naive.isoformat(' '),
-        human=now.format(time.HUMAN_FORMAT)
+        utc=u(now.to('utc').isoformat().replace('+00:00', 'Z')),
+        local=u(now.isoformat()),
+        naive=u(now.to('local').naive.isoformat(' ')),
+        human=u(now.format(time.HUMAN_FORMAT))
     )
     for key in ('utc', 'local', 'naive'):
         result = runner.invoke(time.cli_parse, [data[key]])
