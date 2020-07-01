@@ -5,8 +5,6 @@
 Developed in Python3, also work smoothly in Python2 with python-future.
 
 ```bash
-$ pip install git+https://github.com/graycarl/hbkit.git
-$ hbkit --help
 Usage: hbkit [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -16,18 +14,19 @@ Options:
   --help         Show this message and exit.
 
 Commands:
-  backup      Make a backup copy for file or directory.
-  config      Commands about configuration management.
-  dns         DNS Management Commands.
-  fs          FileSystem management tools.
-  git         Tools for git.
-  github      Tools about github.
-  ip          Tools about ip address.
-  mac         Tools for living in macOS.
-  random      Generate random string.
-  short       Shorten your url.
-  time        Tools about date & time.
-  watch-urls  Watch urls status.
+  backup   Make a backup copy for file or directory.
+  clash    Some tools about using clash
+  config   Commands about configuration management.
+  dns      DNS Management Commands.
+  fs       FileSystem management tools.
+  git      Tools for git.
+  github   Tools about github.
+  ip       Tools about ip address.
+  mac      Tools for living in macOS.
+  random   Generate random string.
+  time     Tools about date & time.
+  upgrade  Upgrade hbkit from github.
+  yaml     Tools about parsing yaml files.
 ```
 
 ## Setup Dev Environment
