@@ -20,7 +20,7 @@ def cli():
 
 
 @cli.command('from-json')
-@click.argument('input', type=click.File('rb'), default=sys.stdin)
+@click.argument('input', type=click.File('r'), default=sys.stdin)
 def cli_from_json(input):
     """Generate yaml string from json content."""
     data = json.loads(input.read())
@@ -28,7 +28,7 @@ def cli_from_json(input):
 
 
 @cli.command('to-json')
-@click.argument('input', type=click.File('rb'), default=sys.stdin)
+@click.argument('input', type=click.File('r'), default=sys.stdin)
 def cli_to_json(input):
-    data = yaml.safe_load(input.read().decode('utf-8'))
+    data = yaml.safe_load(input.read())
     click.echo(json.dumps(data, indent=2, ensure_ascii=False))
