@@ -56,14 +56,14 @@ def cli_build_config(template, origin, proxy_type, reverse):
 
 # Use OrderedDict to keep key-value order in yaml file.
 # Got solution from: https://stackoverflow.com/a/21912744
-def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
+def ordered_load(stream):
 
-    class OrderedLoader(Loader):
+    class OrderedLoader(yaml.Loader):
         pass
 
     def construct_mapping(loader, node):
         loader.flatten_mapping(node)
-        return object_pairs_hook(loader.construct_pairs(node))
+        return OrderedDict(loader.construct_pairs(node))
     OrderedLoader.add_constructor(
         yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
         construct_mapping)
