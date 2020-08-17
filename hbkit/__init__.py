@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
 import click
-from future.standard_library import install_aliases
-install_aliases()
 
 from . import core, random, git, backup, time, config, ip  # noqa
 from . import dns, mac, fs, github, upgrade, yaml, clash   # noqa
 
 
-__version__ = '0.9.7'
+__version__ = '1.0.0'
 
 
 def print_version(ctx, param, value):

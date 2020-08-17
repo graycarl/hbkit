@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/graycarl/hbkit.svg?branch=master)](https://travis-ci.org/graycarl/hbkit)
 
-Developed in Python3, also work smoothly in Python2 with python-future.
+Work on python3 only.
 
 ```bash
 Usage: hbkit [OPTIONS] COMMAND [ARGS]...
@@ -34,3 +34,7 @@ Commands:
 1. Create add active a virtualenv;
 2. Run `pip install -e '.[dev]'` in root dir;
 3. Run `py.test`;
+
+## Roadmap
+
+- [ ] Remove python-future
