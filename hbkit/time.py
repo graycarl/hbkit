@@ -46,7 +46,7 @@ def cli_parse(time_string):
 
 def output(time):
     lines = [
-        ('TIMESTAMP: ' + str(time.timestamp)),
+        ('TIMESTAMP: ' + str(time.int_timestamp)),
         ('ISO UTC:   ' + time.to('utc').isoformat().replace('+00:00', 'Z')),
         ('ISO LOCAL: ' + time.to('local').isoformat()),
         ('HUMAN:     ' + time.to('local').format(HUMAN_FORMAT))
