@@ -18,8 +18,7 @@ setup(
     package_data={'hbkit': ['data/clash-template.yml']},
     install_requires=['click~=5.0', 'requests~=2.0', 'future~=0.16',
                       'arrow~=1.0', 'configparser~=3.5', 'dnspython~=1.15'],
-    extras_require=dict(dev=['mock', 'pytest', 'python-language-server',
-                             'flake8', 'autopep8']),
+    extras_require=dict(dev=['mock', 'pytest', 'python-lsp-server', 'flake8', 'autopep8']),
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'mock'],
     entry_points={
