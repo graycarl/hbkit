@@ -44,30 +44,36 @@ dns-safe:
     - 'tls://dns.google'
 
 proxies:
+  - name: Ladder Tokio
+    type: ss
+    server: x.graycarl.me
+    port: 10021
+    cipher: chacha20-ietf-poly1305
+    password: "998900"
+    udp: true
+    plugin: obfs
+    plugin-opts:
+      mode: http
+      host: ds.download.windowsupdate.com
 
 proxy-groups:
   # url-test select which proxy will be used by benchmarking speed to a URL.
   - name: "FAST"
     type: url-test
-    proxies:
-      - proxy1
-      - proxy2
+    proxies: []
     url: 'http://www.gstatic.com/generate_204'
     interval: 60
 
   - name: "FALLBACK"
     type: fallback
     proxies:
-      - proxy1
-      - proxy2
+      - Ladder Tokio
     url: 'http://www.gstatic.com/generate_204'
     interval: 60
 
   - name: "SPECIFY"
     type: select
-    proxies:
-      - proxy1
-      - proxy2
+    proxies: []
 
   - name: PROXY
     type: select

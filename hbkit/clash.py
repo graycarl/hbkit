@@ -47,10 +47,10 @@ def cli_build_config(template, origin, proxy_type, reverse):
         proxies = list(filter(lambda p: p['type'] == proxy_type, proxies))
     if reverse:
         proxies = list(reversed(proxies))
-    template['proxies'] = proxies
+    template['proxies'].extend(proxies)
     for group in template['proxy-groups']:
         if group['name'] in ['FAST', 'FALLBACK', 'SPECIFY']:
-            group['proxies'] = [p['name'] for p in proxies]
+            group['proxies'].extend([p['name'] for p in proxies])
     click.echo(ordered_dump(template, allow_unicode=True))
 
 
