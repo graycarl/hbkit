@@ -1,21 +1,35 @@
-use rand;
-use rand::distributions::DistString;
-use clap::Parser;
-use hbkit::random::RandomDist;
+use clap::{Parser, Subcommand};
 
-/// Simple program to greet a person
-#[derive(Parser, Debug)]
+use cmd::Command;
+mod cmd;
+
+/// Personal toolkit
+#[derive(Parser)]
 #[clap(author, version, about, long_about=None)]
-struct Args {
-    /// Random string length
-    #[clap(short, long, value_parser, default_value_t = 12)]
-    length: u8
+pub struct Args {   // TODO: Why need to be pub
+    /// Verbose mode
+    #[clap(short, long, action)]
+    pub verbose: bool,
+    
+    #[clap(subcommand)]
+    command: Commands
 }
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Generate random strings
+    Random(cmd::random::Random),
+}
+
 
 fn main() {
     let args = Args::parse();
-    let rd = RandomDist::new("naf").unwrap();
-    let mut rng = rand::thread_rng();
+    let ctx = cmd::Context::new(&args);
+    ctx.start();
 
-    println!("Hello {}", rd.sample_string(&mut rng, args.length as usize));
+    match args.command {
+        Commands::Random(random) => {
+            random.run(&ctx);
+        }
+    }
 }

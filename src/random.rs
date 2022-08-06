@@ -21,7 +21,7 @@ impl RandomDist {
     /// - n: 0..9
     /// - a: a..z
     /// - u: A..Z
-    /// - f: !@#$%&*
+    /// - f: !@#$%&
     pub fn new(flags: &str) -> Result<Self, String> {
         let mut s = String::new();
         for f in flags.chars() {
@@ -29,7 +29,8 @@ impl RandomDist {
                 'n' => s.push_str("0123456789"),
                 'a' => s.push_str("abcdefghijklmnopqrstuvwxyz"),
                 'u' => s.push_str("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
-                'f' => s.push_str("!@#$%&*"),
+                'f' => s.push_str("!@#$%&"),
+                'x' => s.push_str("0123456789abcdef"),
                 _ => return Err(format!("Unknown flag: '{}'", f))
             }
         }
