@@ -22,9 +22,9 @@ impl RandomDist {
     /// - a: a..z
     /// - u: A..Z
     /// - f: !@#$%&
-    pub fn new(flags: &str) -> Result<Self, String> {
+    pub fn new<T>(flags: T) -> Result<Self, String> where T: Into<String> {
         let mut s = String::new();
-        for f in flags.chars() {
+        for f in flags.into().chars() {
             match f {
                 'n' => s.push_str("0123456789"),
                 'a' => s.push_str("abcdefghijklmnopqrstuvwxyz"),

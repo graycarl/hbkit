@@ -18,7 +18,7 @@ pub struct Args {   // TODO: Why need to be pub
 #[derive(Subcommand)]
 enum Commands {
     /// Generate random strings
-    Random(cmd::random::Random),
+    Random(cmd::Random),
 }
 
 

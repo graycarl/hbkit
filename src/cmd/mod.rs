@@ -25,4 +25,5 @@ pub trait Command {
     fn run(&self, ctx: &Context);
 }
 
-pub mod random;
+mod random;
+pub use random::Random;
