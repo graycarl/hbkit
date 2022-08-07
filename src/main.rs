@@ -6,7 +6,7 @@ mod cmd;
 /// Personal toolkit
 #[derive(Parser)]
 #[clap(author, version, about, long_about=None)]
-pub struct Args {   // TODO: Why need to be pub
+struct Args {  // See: rustc --explain E0446
     /// Verbose mode
     #[clap(short, long, action)]
     pub verbose: bool,

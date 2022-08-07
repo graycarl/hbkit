@@ -6,7 +6,8 @@ pub struct Context {
 }
 
 impl Context {
-    pub fn new(args: &Args) -> Self {
+    // See: rustc --explain E0446
+    pub(crate) fn new(args: &Args) -> Self {
         return Context {
             verbose: args.verbose
         };
