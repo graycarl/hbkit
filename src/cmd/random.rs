@@ -1,6 +1,6 @@
 use clap::Args;
 use rand::distributions::DistString;
-use hbkit::random::RandomDist;
+use hbkit::libs::random::RandomDist;
 
 #[derive(Args)]
 pub struct Random {
