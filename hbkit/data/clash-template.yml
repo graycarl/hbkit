@@ -88,6 +88,7 @@ rules:
   - DOMAIN-KEYWORD,google,PROXY
   - DOMAIN,google.com,PROXY
   - DOMAIN-SUFFIX,ad.com,REJECT
+  - DOMAIN-KEYWORD,zoom,DIRECT
   - DOMAIN-SUFFIX,dl.playstation.net,DIRECT
   - DOMAIN-SUFFIX,okta.com,DIRECT
   - IP-CIDR,127.0.0.0/8,DIRECT

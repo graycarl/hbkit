@@ -8,7 +8,7 @@ from . import core, random, git, backup, time, config, ip  # noqa
 from . import dns, mac, fs, github, upgrade, yaml, clash   # noqa
 
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 
 def print_version(ctx, param, value):
