@@ -89,6 +89,9 @@ rules:
   - DOMAIN,google.com,PROXY
   - DOMAIN-SUFFIX,ad.com,REJECT
   - DOMAIN-KEYWORD,zoom,DIRECT
+  - DOMAIN-SUFFIX,bing.com,SPECIFY
+  - DOMAIN-SUFFIX,openai.com,SPECIFY
+  - DOMAIN-SUFFIX,pornhub.com,SPECIFY
   - DOMAIN-SUFFIX,dl.playstation.net,DIRECT
   - DOMAIN-SUFFIX,okta.com,DIRECT
   - IP-CIDR,127.0.0.0/8,DIRECT
