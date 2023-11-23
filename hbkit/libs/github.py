@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-from builtins import *      # noqa
 import re
 import arrow
-import urllib
 import logging
+import urllib.parse
 import requests
 
 
@@ -21,7 +18,7 @@ class GithubClient(object):
             'Travis-API-Version': '3',
             'User-Agent': 'hbkit',
         }
-        url = urllib.request.urljoin(self.travis_api, path)
+        url = urllib.parse.urljoin(self.travis_api, path)
         resp = getattr(requests, method)(url, headers=headers)
         try:
             resp.raise_for_status()

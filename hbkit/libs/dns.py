@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-from builtins import *      # noqa
 import re
-import urllib
+import urllib.parse
 import logging
 import collections
 import requests
@@ -13,7 +10,7 @@ class DNSClient(object):
     logger = logging.getLogger('dnsclient')
 
     Record = collections.namedtuple(
-        'DNSRecord', ('name', 'type', 'value'))
+        'Record', ('name', 'type', 'value'))
     _regex_ip = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
     _regex_domain = re.compile(r'([-_\w]+\.)+[-_\w]+')
 
