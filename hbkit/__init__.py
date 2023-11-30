@@ -7,7 +7,7 @@ from . import dns, mac, fs, github, upgrade, yaml, clash
 __version__ = '2.0.1'
 
 
-def print_version(ctx, param, value):
+def print_version(ctx, _, value):
     if not value or ctx.resilient_parsing:
         return
     click.echo('Current version is: ' + __version__)

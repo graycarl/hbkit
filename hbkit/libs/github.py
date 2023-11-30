@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 import re
 import arrow
 import logging
@@ -5,15 +6,15 @@ import urllib.parse
 import requests
 
 
-class GithubClient(object):
+class GithubClient:
 
     travis_api = 'https://api.travis-ci.org/'
     logger = logging.getLogger('githubclient')
 
-    def __init__(self, token=None):
+    def __init__(self, token: str | None = None):
         self.token = token
 
-    def _request_travis(self, method, path):
+    def _request_travis(self, method: str, path: str) -> dict:
         headers = {
             'Travis-API-Version': '3',
             'User-Agent': 'hbkit',
@@ -27,7 +28,7 @@ class GithubClient(object):
             raise
         return resp.json()
 
-    def check_ci(self, repo, branch='master'):
+    def check_ci(self, repo: str, branch: str = 'master') -> Iterable[str]:
         path = '/repo/{}/branch/{}'.format(
             urllib.parse.quote_plus(repo), branch
         )
@@ -46,7 +47,7 @@ class GithubClient(object):
             yield line.format(**data)
 
 
-def iter_github_repos_from_remotes(remotes):
+def iter_github_repos_from_remotes(remotes: Iterable[str]) -> Iterable[str]:
     p = r'(https?://github.com/|git@github.com:)(\w+/\w+)\.git'
     for remote in remotes:
         match = re.match(p, remote)

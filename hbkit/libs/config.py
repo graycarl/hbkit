@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 import os
 import collections
 import configparser
@@ -17,21 +18,21 @@ class ConfigManager(object):
     :param defaults: the default values for all configuration. like
                      `{'m1': {'key1': 'value1', 'key2': 'value2'}, 'm2': {}}`
     """
-    Item = collections.namedtuple('ConfigItem', ('key', 'value', 'default'))
+    Item = collections.namedtuple('Item', ('key', 'value', 'default'))
     _bool_true_values = {'yes', 'on', 'true', '1'}
     _bool_false_values = {'no', 'off', 'false', '0'}
 
     class OptionNotFound(Exception):
-        def __init__(self, key):
+        def __init__(self, key: str):
             self.key = key
 
-    def __init__(self, path, defaults):
+    def __init__(self, path: str, defaults: dict):
         self.path = path
         self.defaults = defaults
         self.local = configparser.ConfigParser()
         self.local.read([path])
 
-    def _parse_key(self, key):
+    def _parse_key(self, key: str) -> tuple[str, str]:
         try:
             section, option = key.split('.', 1)
         except ValueError:
@@ -40,7 +41,7 @@ class ConfigManager(object):
             raise self.OptionNotFound(key)
         return section, option
 
-    def list(self):
+    def list(self) -> Iterator[Item]:
         for section in self.defaults:
             for option in self.defaults[section]:
                 try:
@@ -50,7 +51,7 @@ class ConfigManager(object):
                 default = self.defaults[section][option]
                 yield self.Item(section + '.' + option, local, default)
 
-    def set(self, key, value):
+    def set(self, key: str, value: str) -> None:
         """Set local Value. None means delete the local key, using defaults."""
         section, option = self._parse_key(key)
         if value is None:
@@ -62,7 +63,7 @@ class ConfigManager(object):
             self.local[section] = {}
         self.local[section][option] = value
 
-    def get(self, key, type=str):
+    def get(self, key: str, type: type=str):
         if type not in (str, bool, int, float):
             raise RuntimeError('Unsupported type')
         section, option = self._parse_key(key)
@@ -83,7 +84,7 @@ class ConfigManager(object):
         else:
             return type(value)
 
-    def save_to_file(self):
+    def save_to_file(self) -> None:
         try:
             configfile = open(self.path, 'w')
         # 暂时没法使用 Python3 的 FileNotFoundError，因为 Python2 没有这个定义
