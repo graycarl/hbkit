@@ -1,7 +1,7 @@
 import sys
 import click
 from collections import OrderedDict
-import pkg_resources
+from importlib import resources
 try:
     import yaml
 except ImportError:
@@ -31,10 +31,7 @@ def cli():
 def cli_build_config(template, origin, proxy_type, reverse):
     """Build new config from origin according to template"""
     if not template:
-        template = pkg_resources \
-            .resource_stream('hbkit', 'data/clash-template.yml') \
-            .read() \
-            .decode('utf-8')
+        template = resources.read_text('hbkit.data', 'clash-template.yml')
     else:
         template = template.read()
     template = ordered_load(template)
@@ -54,6 +51,7 @@ def cli_build_config(template, origin, proxy_type, reverse):
 # Use OrderedDict to keep key-value order in yaml file.
 # Got solution from: https://stackoverflow.com/a/21912744
 def ordered_load(stream):
+    assert yaml is not None
 
     class OrderedLoader(yaml.Loader):
         pass
@@ -68,6 +66,8 @@ def ordered_load(stream):
 
 
 def ordered_dump(data, stream=None, Dumper=None, **kwds):
+    assert yaml is not None
+
     Dumper = yaml.Dumper if Dumper is None else Dumper
 
     class OrderedDumper(Dumper):

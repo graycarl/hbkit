@@ -4,7 +4,7 @@ from . import core, random, git, backup, time, config, ip
 from . import dns, mac, fs, github, upgrade, yaml, clash
 
 
-__version__ = '1.0.1'
+__version__ = '2.0.1'
 
 
 def print_version(ctx, param, value):
