@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-from builtins import *   # noqa
 import os
 import click
-import urllib
+import urllib.parse
 import logging
 import platform
 import threading
@@ -17,7 +14,7 @@ except ImportError:
 
 class Watcher(object):
 
-    def __init__(self, timeout, delay, interval=1):
+    def __init__(self, timeout: int, delay: int, interval: int=1):
         self.timeout = timeout
         self.delay = delay
         self.interval = interval
@@ -44,7 +41,7 @@ class Watcher(object):
         except KeyboardInterrupt:
             raise click.Abort
 
-    def get_mtime(self, path):
+    def get_mtime(self, path) -> float:
         ignores = ['.git', '.svn']
         nodes = []
         for root, dirs, files in os.walk(path, topdown=True):
@@ -71,7 +68,7 @@ class SyncScheme(object):
     class ConflictFound(Exception):
         pass
 
-    def _notify(self, title, content):
+    def _notify(self, title, content):  # noqa
         if not self.notify:
             return
         script = u'display notification "{content}" with title "{title}"'
@@ -140,7 +137,8 @@ class GitScheme(SyncScheme):
         self.repo = pygit2.Repository(path)
 
         class Callbacks(pygit2.RemoteCallbacks):
-            def credentials(self, url, username_from_url, allowed_types):
+            def credentials(self, url, _, allowed_types):
+                assert pygit2
                 if allowed_types & pygit2.credentials.GIT_CREDENTIAL_USERNAME:
                     return pygit2.Username("git")
                 elif allowed_types & pygit2.credentials.GIT_CREDENTIAL_SSH_KEY:
@@ -162,6 +160,7 @@ class GitScheme(SyncScheme):
                             input=stdin.encode('utf-8'),
                             capture_output=True,
                             check=True)
+                        username = password = None
                         for line in result.stdout.decode('utf-8').split('\n'):
                             logging.debug('Got line: %s', line)
                             if line.startswith('username='):
@@ -182,12 +181,13 @@ class GitScheme(SyncScheme):
 
     def _commit_message(self):
         hostname = platform.node()
-        return self.commit_message.format(**locals())
+        return self.commit_message.format(hostname=hostname)
 
     def pre_sync(self):
         # check status
+        assert pygit2 is not None
         status = self.repo.status()
-        if any(map(lambda v: v & pygit2.GIT_STATUS_CONFLICTED,
+        if any(map(lambda v: v & pygit2.GIT_STATUS_CONFLICTED,  # type: ignore
                    status.values())):
             logging.warning('The repo is in conflict status, ignore syncing.')
             raise self.ConflictFound
@@ -196,7 +196,7 @@ class GitScheme(SyncScheme):
         author = self.repo.default_signature
         index = self.repo.index
         index.add_all()
-        diff = index.diff_to_tree(self.repo[self.repo.head.target].tree)
+        diff = index.diff_to_tree(self.repo[self.repo.head.target].tree) # type: ignore
         if not diff:
             logging.info('No local changes need to be committed.')
         else:
@@ -228,6 +228,7 @@ class GitScheme(SyncScheme):
             logging.debug('Fetch remote done.')
 
     def merge_changes(self):
+        assert pygit2 is not None
         author = self.repo.default_signature
         # see: https://github.com/MichaelBoselowitz/pygit2-examples
         remote = self.repo.lookup_reference('refs/remotes/origin/master')
@@ -246,7 +247,7 @@ class GitScheme(SyncScheme):
             self.repo.merge(remote.target)
             if self.repo.index.conflicts is not None:
                 for conflict in self.repo.index.conflicts:
-                    logging.warning('Conflicts found in:', conflict[0].path)
+                    logging.warning('Conflicts found in:', conflict[1].path)  # type: ignore
                 raise self.ConflictFound
 
             tree = self.repo.index.write_tree()

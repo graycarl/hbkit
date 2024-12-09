@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
 import click
-from future.standard_library import install_aliases
-install_aliases()
 
-from . import core, random, git, backup, time, config, ip  # noqa
-from . import dns, mac, fs, github, upgrade, yaml, clash   # noqa
+from . import core, random, git, backup, time, config, ip
+from . import dns, mac, fs, github, upgrade, yaml, clash
 
 
-__version__ = '1.0.1'
+__version__ = '2.0.1'
 
 
-def print_version(ctx, param, value):
+def print_version(ctx, _, value):
     if not value or ctx.resilient_parsing:
         return
     click.echo('Current version is: ' + __version__)
