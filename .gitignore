@@ -5,6 +5,8 @@ venv
 *.eggs
 tags
 .pytest_cache
+/build
+/dist
 
 # emacs
 *~
