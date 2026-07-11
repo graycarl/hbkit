@@ -16,12 +16,10 @@ setup(
     version=version,
     packages=['hbkit', 'hbkit.libs'],
     package_data={'hbkit': ['data/clash-template.yml']},
-    install_requires=['click~=7.0', 'requests~=2.0',
-                      'arrow~=1.0', 'configparser~=3.5', 'dnspython~=1.15'],
+    install_requires=['click>=8.0', 'requests>=2.0',
+                      'arrow>=1.0', 'dnspython>=2.0'],
     extras_require=dict(dev=['mock', 'pytest', 'mypy']),
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'mock'],
-    require_python='>=3.6',
+    python_requires='>=3.10',
     entry_points={
         'console_scripts': [
             'hbkit=hbkit:cli'

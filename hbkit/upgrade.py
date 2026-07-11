@@ -1,12 +1,6 @@
+import sys
+import subprocess
 import click
-try:
-    from pip import main as pipmain
-except ImportError:
-    from pip._internal import main as pipmain
-    try:
-        pipmain = pipmain.main
-    except AttributeError:
-        pass
 
 
 @click.command('upgrade', help='Upgrade hbkit from github.')
@@ -15,4 +9,6 @@ except ImportError:
 def cli(source):
     source = 'git+' + source
     click.echo('Start upgrade from %s' % source)
-    pipmain(['install', '--upgrade', source])
+    subprocess.check_call(
+        [sys.executable, '-m', 'pip', 'install', '--upgrade', source]
+    )

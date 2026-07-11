@@ -8,7 +8,7 @@ from .libs.dns import DNSPodClient, DNSClient
 @click.pass_context
 def cli(ctx, domain):
     """DNS Management Commands."""
-    ns = dns.resolver.query(domain, 'NS')[0].to_text()
+    ns = dns.resolver.resolve(domain, 'NS')[0].to_text()
     if 'dnspod.net' in ns.lower():
         token = ctx.obj.config.get('dnspod.token')
         if not token:

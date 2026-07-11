@@ -1,7 +1,7 @@
 import sys
 import click
 from collections import OrderedDict
-from importlib import resources
+from importlib.resources import files
 try:
     import yaml
 except ImportError:
@@ -31,7 +31,7 @@ def cli():
 def cli_build_config(template, origin, proxy_type, reverse):
     """Build new config from origin according to template"""
     if not template:
-        template = resources.read_text('hbkit.data', 'clash-template.yml')
+        template = files('hbkit.data').joinpath('clash-template.yml').read_text('utf-8')
     else:
         template = template.read()
     template = ordered_load(template)
